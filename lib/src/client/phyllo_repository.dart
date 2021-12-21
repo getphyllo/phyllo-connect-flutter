@@ -1,0 +1,47 @@
+import 'dart:developer';
+
+import 'package:phyllo_connect/phyllo_connect.dart';
+import 'package:phyllo_connect/src/client/http.dart';
+import 'package:phyllo_connect/src/client/result.dart';
+
+class PhylloRepository {
+  PhylloRepository._();
+
+  static final PhylloRepository instance = PhylloRepository._();
+
+  final Http _http = Http();
+
+  Future<String?> getUserId(String env, PhylloArgs args) async {
+    Result result = await _http.request(
+      requestType: RequestType.post,
+      url: '$env/v1/users',
+      args: args,
+      body: {'name': getRadomString(8), 'external_id': getRadomString(20)},
+    );
+    if (result is Success) {
+      return result.value['id'];
+    } else {
+      log((result as Error).message, name: 'getUserId');
+      return null;
+    }
+  }
+
+  Future<String?> getSdkToken(String env, PhylloArgs args,
+      {required String userId}) async {
+    Result result = await _http.request(
+      requestType: RequestType.post,
+      url: '$env/v1/sdk-tokens',
+      args: args,
+      body: {
+        'user_id': userId,
+        'products': ['IDENTITY', 'ENGAGEMENT', 'INCOME'],
+      },
+    );
+    if (result is Success) {
+      return result.value['sdk_token'];
+    } else {
+      log((result as Error).message, name: 'getSdkToken');
+      return null;
+    }
+  }
+}
