@@ -61,7 +61,7 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
 
     private fun getPhylloEnvironment(env: String): PhylloConnect.ENVIRONMENT {
         return when (env) {
-            "dav" -> {
+            "development" -> {
                 return PhylloConnect.ENVIRONMENT.DEVELOPMENT
             }
             "sandbox" -> {
@@ -84,7 +84,7 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
     ) {
 
         Log.d(logTag, "Initialize Phyllo Connect Sdk")
-        
+
         PhylloConnect.initialize(context = context,
             name = name,
             userId = userId,

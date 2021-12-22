@@ -1,4 +1,4 @@
-part of 'configs.dart';
+import 'dart:math';
 
 String getRadomString(int length, {bool isNumberic = false}) {
   String _chars = isNumberic

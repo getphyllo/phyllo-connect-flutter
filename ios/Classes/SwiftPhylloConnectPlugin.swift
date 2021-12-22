@@ -43,7 +43,7 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin {
     
     public func getPhylloEnvironment(env :String?) -> PhylloEnvironment {
         switch (env) {
-        case ("dev"):
+        case ("development"):
             return PhylloEnvironment.dev
         case ("sandbox"):
             return PhylloEnvironment.sandbox
@@ -64,7 +64,7 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin {
         phylloConfig.env = getPhylloEnvironment(env: arguments["environment"] as? String)
         phylloConfig.phylloVC = getPhylloViewController()!
         
-        let phyllo = PhylloConnectSDK(configuration: phylloConfig)
+        let phyllo = PhylloConnect(configuration: phylloConfig)
         phyllo.launchSDK(workPlatformId: (arguments["platformId"] as? String)!)
         
     }

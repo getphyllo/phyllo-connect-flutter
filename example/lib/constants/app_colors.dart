@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._();
 
-  static const Color primary = Color.fromRGBO(81, 79, 155, 1);
+  static const Color primaryColor = Color.fromRGBO(81, 79, 155, 1);
 }
 
-MaterialColor generateMaterialColor([Color color = AppColors.primary]) {
+MaterialColor generateMaterialColor([Color color = AppColors.primaryColor]) {
   return MaterialColor(color.value, {
     50: color,
     100: color,

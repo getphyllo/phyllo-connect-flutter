@@ -3,7 +3,7 @@ PODS:
   - phyllo_connect (0.0.1):
     - Flutter
     - PhylloConnect
-  - PhylloConnect (0.1.4)
+  - PhylloConnect (0.1.8)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -22,7 +22,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   phyllo_connect: 5c50adc65e0d834d00a0f37ab4378191009cff3b
-  PhylloConnect: cfbd8f39055c57f409ff000f8cbb3bdc53f13d7f
+  PhylloConnect: 0754c29b6f438b9bb10ea14327d018832a4a822b
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 

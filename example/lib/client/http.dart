@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:phyllo_connect/phyllo_connect.dart';
 import 'package:http/http.dart';
-import 'package:phyllo_connect/src/client/result.dart';
+import 'package:phyllo_connect_example/client/result.dart';
+import 'package:phyllo_connect_example/models/phyllo_args.dart';
+
+enum RequestType { post, get }
 
 class Http {
   final Client _client;

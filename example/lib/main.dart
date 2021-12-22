@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:phyllo_connect_example/constants/app_colors.dart';
-import 'package:phyllo_connect_example/views/home.dart';
+import 'package:phyllo_connect_example/provider/pholly_provider.dart';
+import 'package:phyllo_connect_example/views/pages/home.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,17 +13,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Phyllo Connect Example',
-      theme: _getThemeData(),
-      home: const MyHomePage(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => PhylloProvider())
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Phyllo Connect Example',
+        theme: _getThemeData(),
+        home: const MyHomePage(),
+      ),
     );
   }
 
   ThemeData _getThemeData() {
     return ThemeData(
-      primaryColor: AppColors.primary,
+      primaryColor: AppColors.primaryColor,
       backgroundColor: Colors.white,
       scaffoldBackgroundColor: Colors.white,
       visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -37,7 +44,7 @@ class MyApp extends StatelessWidget {
       ),
       colorScheme:
           ColorScheme.fromSwatch(primarySwatch: generateMaterialColor())
-              .copyWith(secondary: AppColors.primary),
+              .copyWith(secondary: AppColors.primaryColor),
     );
   }
 }

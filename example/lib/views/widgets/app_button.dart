@@ -25,7 +25,7 @@ class AppButton extends StatelessWidget {
       ),
       elevation: 0,
       textColor: Colors.white,
-      color: AppColors.primary,
+      color: AppColors.primaryColor,
       highlightElevation: 0,
       height: height,
       minWidth: width ?? mq.size.width,

@@ -1,4 +1,4 @@
-import 'package:phyllo_connect/phyllo_connect.dart';
+import 'enum.dart';
 
 class PhylloConfig {
   final String appName;
