@@ -1,7 +1,7 @@
 name: phyllo_connect
-description: A new flutter plugin project.
+description: Phyllo Connect is a quick and secure way to connect work platforms via Phyllo in your iOS app.
 version: 0.0.1
-homepage:
+homepage: https://github.com/getphyllo/phyllo-connect-flutter
 
 environment:
   sdk: ">=2.15.0 <3.0.0"
