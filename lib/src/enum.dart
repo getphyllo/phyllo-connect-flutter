@@ -1,4 +1,4 @@
-enum PhylloEnvironment { development, sandbox, prod }
+enum PhylloEnvironment { development, sandbox, production }
 
 extension PhylloEnvironmentExtension on PhylloEnvironment {
   String get name {

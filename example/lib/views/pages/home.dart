@@ -27,7 +27,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     phylloProvider.launchPhylloConnectSdk(args);
-  }
+  }        
 
   @override
   Widget build(BuildContext context) {

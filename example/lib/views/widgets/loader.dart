@@ -13,12 +13,18 @@ class Loader extends StatelessWidget {
       this.isExpanded = false})
       : super(key: key);
 
-  factory Loader.loading() => const Loader();
+  factory Loader.loading() {
+    return const Loader();
+  }
 
   factory Loader.loadingWithBackground(bool visible,
-          {bool isBackground = true, bool isExpanded = true}) =>
-      Loader(
-          isBackground: isBackground, visible: visible, isExpanded: isExpanded);
+      {bool isBackground = true}) {
+    return Loader(
+      isBackground: isBackground,
+      visible: visible,
+      isExpanded: true,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

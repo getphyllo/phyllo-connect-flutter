@@ -44,10 +44,10 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
-		<dict>
-    		<key>NSAllowsArbitraryLoads</key><true/>
-		</dict>
-		<key>UIUserInterfaceStyle</key>
-<string>Light</string>
+	<dict>
+    	<key>NSAllowsArbitraryLoads</key><true/>
+	</dict>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 </dict>
 </plist>

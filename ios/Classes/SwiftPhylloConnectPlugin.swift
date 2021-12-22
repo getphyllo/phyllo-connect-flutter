@@ -47,7 +47,7 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin {
             return PhylloEnvironment.dev
         case ("sandbox"):
             return PhylloEnvironment.sandbox
-        case ("prod"):
+        case ("production"):
             return PhylloEnvironment.prod
         default:
             return PhylloEnvironment.dev
@@ -57,9 +57,9 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin {
     func launchPhylloConnectSdk(arguments : Dictionary<String, Any>){
     
         var phylloConfig = PhylloConfig()
-        phylloConfig.developerName =  "Etzy"
+        phylloConfig.developerName =  (arguments["appName"] as? String)!
         phylloConfig.deepLinkURL = "https://etsy.ai"
-        phylloConfig.sdkToken = (arguments["sdkToken"] as? String)!
+        phylloConfig.sdkToken = "Bearer " + (arguments["sdkToken"] as? String)!
         phylloConfig.userId = (arguments["userId"] as? String)!
         phylloConfig.env = getPhylloEnvironment(env: arguments["environment"] as? String)
         phylloConfig.phylloVC = getPhylloViewController()!

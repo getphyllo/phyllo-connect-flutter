@@ -13,17 +13,12 @@ class PhylloRepository {
   final Http _http = Http();
 
   Future<String?> getUserId(String env, PhylloArgs args) async {
-
-    log('URL : $env/v1/users');
-    log('args : $args');
-    
     Result result = await _http.request(
       requestType: RequestType.post,
       url: '$env/v1/users',
       args: args,
       body: {'name': getRadomString(8), 'external_id': getRadomString(20)},
     );
-    
     if (result is Success) {
       return result.value['id'];
     } else {
@@ -34,8 +29,6 @@ class PhylloRepository {
 
   Future<String?> getSdkToken(String env, PhylloArgs args,
       {required String userId}) async {
-
-    log('UserID ---> $userId');
     Result result = await _http.request(
       requestType: RequestType.post,
       url: '$env/v1/sdk-tokens',

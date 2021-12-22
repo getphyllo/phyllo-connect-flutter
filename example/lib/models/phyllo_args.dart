@@ -17,6 +17,6 @@ class PhylloArgs {
 
   @override
   String toString() {
-    return 'PhylloArgs{environment: $environment, clientId: $clientId, clientSecret: $clientSecret}';
+    return 'PhylloArgs{appName: $appName, platformId: $platformId, clientId: $clientId, clientSecret: $clientSecret, environment: $environment}';
   }
 }

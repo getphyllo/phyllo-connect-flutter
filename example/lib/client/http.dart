@@ -25,6 +25,8 @@ class Http {
     String basicAuth =
         'Basic ${base64Encode(utf8.encode('${args.clientId}:${args.clientSecret}'))}';
 
+    log('$url ==> $body', name: 'REQUEST');
+
     try {
       Map<String, String> headers = {
         'Content-Type': 'application/json',

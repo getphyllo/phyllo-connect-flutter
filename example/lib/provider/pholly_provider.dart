@@ -28,7 +28,7 @@ class PhylloProvider extends DefaultChangeNotifier {
               appName: args.appName,
               platformId: args.platformId,
               userId: userId,
-              sdkToken: 'Bearer $sdkToken',
+              sdkToken: sdkToken,
               environment: args.environment,
             );
 

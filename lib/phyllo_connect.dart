@@ -13,8 +13,8 @@ class PhylloConnect {
   static const MethodChannel _channel = MethodChannel('phyllo_connect');
 
   /// Get Environment baseUrl on [PhylloEnvironment] type
-  static Future<String?> getPhylloEnvironmentUrl(PhylloEnvironment env) async {
-    Map<String, dynamic> args = {'type': env.name};
+  static Future<String?> getPhylloEnvironmentUrl(PhylloEnvironment environment) async {
+    Map<String, dynamic> args = {'type': environment.name};
     final String? envUrl =
         await _channel.invokeMethod('getPhylloEnvironmentUrl', args);
     return envUrl;
