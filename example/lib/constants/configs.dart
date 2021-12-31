@@ -7,5 +7,5 @@ class Configs {
 
   static const String clientSecret = '<client secret here>';
 
-  static const PhylloEnvironment environment = PhylloEnvironment.development;
+  static const PhylloEnvironment environment = PhylloEnvironment.sandbox;
 }
