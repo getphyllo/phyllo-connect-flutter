@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:http/http.dart';
 import 'package:phyllo_connect_example/client/result.dart';
-import 'package:phyllo_connect_example/models/phyllo_args.dart';
+import 'package:phyllo_connect_example/constants/configs.dart';
 
 enum RequestType { post, get }
 
@@ -17,13 +17,12 @@ class Http {
     required RequestType? requestType,
     required String url,
     dynamic body,
-    required PhylloArgs args,
   }) async {
     Uri uri = Uri.parse(url);
 
     // Basic auth
     String basicAuth =
-        'Basic ${base64Encode(utf8.encode('${args.clientId}:${args.clientSecret}'))}';
+        'Basic ${base64Encode(utf8.encode('${Configs.clientId}:${Configs.clientSecret}'))}';
 
     log('$url ==> $body', name: 'REQUEST');
 

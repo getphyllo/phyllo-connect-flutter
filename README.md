@@ -2,7 +2,7 @@
 
 [![pub package](https://img.shields.io/pub/v/phyllo_connect.svg)](https://pub.dev/packages/phyllo_connect)
 
-Phyllo Connect is a quick and secure way to connect work platforms via Phyllo in your iOS app. 
+Phyllo Connect is a quick and secure way to connect work platforms via Phyllo in your app. 
 Supports:
 iOS, Android.
 

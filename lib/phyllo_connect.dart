@@ -21,7 +21,7 @@ class PhylloConnect {
   }
 
   /// Launch PhylloConnect SDK with [PhylloConfig] arguments
-  static Future<void> launchPhylloConnectSdk(PhylloConfig config) async {
-    await _channel.invokeMethod('launchPhylloConnectSdk', config.toArgs());
+  static Future<void> initPhylloConnect(PhylloConfig config) async {
+    await _channel.invokeMethod('initPhylloConnect', config.toArgs());
   }
 }
