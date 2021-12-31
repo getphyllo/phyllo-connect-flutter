@@ -36,17 +36,17 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
                 val env = envType?.let { getPhylloEnvironment(it) }
                 result.success(env!!.baseUrl)
             }
-            "launchPhylloConnectSdk" -> {
+            "initPhylloConnect" -> {
 
                 Log.d(logTag, call.arguments.toString())
 
-                val appName = call.argument<String>("appName")
+                val clientDisplayName = call.argument<String>("clientDisplayName")
                 val userId = call.argument<String>("userId")
-                val sdkToken = call.argument<String>("sdkToken")
+                val token = call.argument<String>("token")
                 val environment = call.argument<String>("environment")
-                val platformId = call.argument<String>("platformId")
+                val workPlatformId = call.argument<String>("workPlatformId")
 
-                launchPhylloConnectSdk(appName!!, userId!!, sdkToken!!, environment!!, platformId!!)
+                initPhylloConnect(clientDisplayName!!, userId!!, token!!, environment!!, workPlatformId!!)
             }
             else -> {
                 result.notImplemented()
@@ -75,21 +75,21 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
     }
 
 
-    private fun launchPhylloConnectSdk(
-        name: String,
+    private fun initPhylloConnect(
+        clientDisplayName: String,
         userId: String,
-        sdkToken: String,
+        token: String,
         environment: String,
-        platformId: String
+        workPlatformId: String
     ) {
 
         Log.d(logTag, "Initialize Phyllo Connect Sdk")
 
         PhylloConnect.initialize(context = context,
-            name = name,
+            name = clientDisplayName,
             userId = userId,
-            token = sdkToken,
-            platformId = platformId,
+            token = token,
+            platformId = workPlatformId,
             environment = getPhylloEnvironment(environment),
             callback = object : ConnectCallback {
 

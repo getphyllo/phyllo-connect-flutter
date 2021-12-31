@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:phyllo_connect_example/constants/configs.dart';
-import 'package:phyllo_connect_example/models/phyllo_args.dart';
-import 'package:phyllo_connect_example/provider/pholly_provider.dart';
-import 'package:phyllo_connect_example/views/widgets/app_button.dart';
-import 'package:phyllo_connect_example/views/widgets/loader.dart';
+import 'package:phyllo_connect_example/pholly_provider.dart';
+import 'package:phyllo_connect_example/views/app_button.dart';
+import 'package:phyllo_connect_example/views/loader.dart';
 import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -14,20 +12,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool isChecked = false;
-
-  void launchPhylloConnectSdk() {
-    var phylloProvider = context.read<PhylloProvider>();
-
-    PhylloArgs args = PhylloArgs(
-      appName: 'Phyllo Connect Example',
-      clientId: Configs.clientId,
-      clientSecret: Configs.clientSecret,
-      environment: Configs.env,
-    );
-
-    phylloProvider.launchPhylloConnectSdk(args);
-  }        
+  static const String instagramId = '9bb8913b-ddd9-430b-a66a-d74d846e6c66';
+  static const String youtubeId = '14d9ddf5-51c6-415e-bde6-f8ed36ad7054';
 
   @override
   Widget build(BuildContext context) {
@@ -49,17 +35,23 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: [
                       AppButton(
                         label: 'Connect Platform Account(S)',
-                        onPressed: launchPhylloConnectSdk,
+                        onPressed: () {
+                          phylloProvider.launchSdk('');
+                        },
                       ),
                       const SizedBox(height: 20),
                       AppButton(
                         label: 'Connect Instagram using Phyllo',
-                        onPressed: () {},
+                        onPressed: () {
+                          phylloProvider.launchSdk(instagramId);
+                        },
                       ),
                       const SizedBox(height: 20),
                       AppButton(
                         label: 'Connect YouTube using Phyllo',
-                        onPressed: () {},
+                        onPressed: () {
+                          phylloProvider.launchSdk(youtubeId);
+                        },
                       ),
                       const SizedBox(height: 10),
                       _buildExistingUserCheckbox(),
@@ -76,6 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildExistingUserCheckbox() {
+    var phylloController = context.read<PhylloProvider>();
     return Padding(
       padding: const EdgeInsets.only(left: 5, top: 10),
       child: Row(
@@ -85,13 +78,11 @@ class _MyHomePageState extends State<MyHomePage> {
             width: 15,
             height: 15,
             child: Checkbox(
-              value: isChecked,
+              value: phylloController.isExistingUser,
               activeColor: Colors.green,
-              onChanged: (value) {
-                setState(() {
-                  isChecked = value!;
-                });
-              },
+              onChanged: phylloController.userId != null
+                  ? phylloController.isExistingUserStatusChanged
+                  : null,
             ),
           ),
           const SizedBox(width: 8),

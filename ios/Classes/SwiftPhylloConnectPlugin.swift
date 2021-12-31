@@ -22,12 +22,12 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin {
                 result("error")
             }
             
-        } else if call.method == "launchPhylloConnectSdk" {
+        } else if call.method == "initPhylloConnect" {
             
             print(call.arguments as Any)
-        
+            
             if let args  = call.arguments as? Dictionary<String, Any>{
-                launchPhylloConnectSdk(arguments: args)
+                initPhylloConnect(config: args)
             } else {
                 result("error")
             }
@@ -54,26 +54,18 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin {
         }
     }
     
-    func launchPhylloConnectSdk(arguments : Dictionary<String, Any>){
-    
+    func initPhylloConnect(config : Dictionary<String, Any>){
+        
         var phylloConfig = PhylloConfig()
-        phylloConfig.developerName =  (arguments["appName"] as? String)!
-        phylloConfig.deepLinkURL = "https://etsy.ai"
-        phylloConfig.sdkToken = "Bearer " + (arguments["sdkToken"] as? String)!
-        phylloConfig.userId = (arguments["userId"] as? String)!
-        phylloConfig.env = getPhylloEnvironment(env: arguments["environment"] as? String)
-        phylloConfig.phylloVC = getPhylloViewController()!
+        phylloConfig.clientDisplayName =  (config["clientDisplayName"] as? String)!
+        phylloConfig.token = "Bearer " + (config["token"] as? String)!
+        phylloConfig.userId = (config["userId"] as? String)!
+        phylloConfig.environment = getPhylloEnvironment(env: config["environment"] as? String)
+        phylloConfig.workPlatformId = (config["workPlatformId"] as? String)!
         
-        let phyllo = PhylloConnect(configuration: phylloConfig)
-        phyllo.launchSDK(workPlatformId: (arguments["platformId"] as? String)!)
-        
+        let phyllo = PhylloConnect(config: phylloConfig)
+        phyllo.open()
     }
     
-    func getPhylloViewController() -> UIViewController? {
-        var viewController: UIViewController? = UIApplication.shared.keyWindow?.rootViewController as! FlutterViewController
-        while viewController?.presentedViewController != nil {
-            viewController = viewController?.presentedViewController
-        }
-        return viewController
-    }
+    
 }
