@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:phyllo_connect_example/pholly_provider.dart';
+import 'package:phyllo_connect_example/phyllo_provider.dart';
 import 'package:phyllo_connect_example/views/app_button.dart';
 import 'package:phyllo_connect_example/views/loader.dart';
 import 'package:provider/provider.dart';

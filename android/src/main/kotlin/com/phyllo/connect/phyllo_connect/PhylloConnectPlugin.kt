@@ -36,7 +36,7 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
                 val env = envType?.let { getPhylloEnvironment(it) }
                 result.success(env!!.baseUrl)
             }
-            "initPhylloConnect" -> {
+            "initialize" -> {
 
                 Log.d(logTag, call.arguments.toString())
 
@@ -46,7 +46,10 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
                 val environment = call.argument<String>("environment")
                 val workPlatformId = call.argument<String>("workPlatformId")
 
-                initPhylloConnect(clientDisplayName!!, userId!!, token!!, environment!!, workPlatformId!!)
+                initialize(clientDisplayName!!, userId!!, token!!, environment!!, workPlatformId!!)
+            }
+            "open" -> {
+                open()
             }
             else -> {
                 result.notImplemented()
@@ -75,7 +78,7 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
     }
 
 
-    private fun initPhylloConnect(
+    private fun initialize(
         clientDisplayName: String,
         userId: String,
         token: String,
@@ -118,6 +121,9 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
                 }
             })
 
+    }
+
+    private fun open(){
         PhylloConnect.startSDK()
     }
 }
