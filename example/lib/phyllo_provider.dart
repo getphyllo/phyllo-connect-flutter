@@ -21,7 +21,7 @@ abstract class DefaultChangeNotifier extends ChangeNotifier {
 class PhylloProvider extends DefaultChangeNotifier {
   bool _isExistingUser = false;
   static const String clientDisplayName = 'Phyllo Connect Example';
-  static String? token;
+  static String? _token;
   static String? _userId;
 
   final PhylloRepository _phylloRepository = PhylloRepository.instance;
@@ -34,16 +34,16 @@ class PhylloProvider extends DefaultChangeNotifier {
 
       if (env != null) {
         if (_isExistingUser) {
-          token = await getSdkToken(env, userId!);
-          if (token != null) {
+          _token = await getSdkToken(env, userId!);
+          if (_token != null) {
             _launchSdk(workPlatformId);
           }
         } else {
           // Get UserId
           _userId = await getUserId(env);
           if (_userId != null) {
-            token = await getSdkToken(env, _userId!);
-            if (token != null) {
+            _token = await getSdkToken(env, _userId!);
+            if (_token != null) {
               _launchSdk(workPlatformId);
             }
           }
@@ -59,10 +59,11 @@ class PhylloProvider extends DefaultChangeNotifier {
       clientDisplayName: clientDisplayName,
       environment: Configs.environment,
       userId: _userId!,
-      token: token!,
+      token: _token!,
       workPlatformId: workPlatformId,
     );
-    PhylloConnect.initPhylloConnect(config);
+    PhylloConnect.initialize(config);
+    PhylloConnect.open();
   }
 
   Future<String?> getPhylloEnvironmentUrl(PhylloEnvironment environment) async {
