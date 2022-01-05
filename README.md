@@ -26,3 +26,26 @@ class Configs {
   static const PhylloEnvironment env = PhylloEnvironment.development; //set phyllo environment
 }
 ```
+
+
+``` dart
+
+import 'package:flutter/material.dart';
+import 'package:phyllo_connect/phyllo_connect.dart';
+import 'package:phyllo_connect_example/client/phyllo_repository.dart';
+import 'package:phyllo_connect_example/constants/configs.dart';
+
+//Too Lunch the sdk here it will method 
+void _launchSdk(String workPlatformId) {
+    PhylloConfig config = PhylloConfig(
+      clientDisplayName: clientDisplayName,
+      environment: Configs.environment,
+      userId: _userId!,
+      token: _token!,
+      workPlatformId: workPlatformId,
+    );
+    PhylloConnect.initialize(config);
+    PhylloConnect.open();
+  }
+
+```

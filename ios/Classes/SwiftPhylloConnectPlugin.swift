@@ -56,7 +56,7 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin {
     }
     
     func open() {
-        let phyllo = PhylloConnect.init(config: phylloConfig)
-        phyllo.open()
+        PhylloConnect.shared.initialize(config: phylloConfig)
+        PhylloConnect.shared.open()
     }
 }
