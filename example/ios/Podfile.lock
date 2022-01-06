@@ -21,7 +21,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  phyllo_connect: c40c5350db444edeff162cdbb2696546dddef442
+  phyllo_connect: 14a3acabd94759112c735dd1125c96bb88036011
   PhylloConnect: 745ddd40ffabeca59057e679cd427b6d9117385b
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
