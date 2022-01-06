@@ -4,7 +4,7 @@ import PhylloConnect
 
 
 public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin {
-    var phylloConfig = PhylloConfig()
+    
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "phyllo_connect", binaryMessenger: registrar.messenger())
         let instance = SwiftPhylloConnectPlugin()
@@ -48,15 +48,24 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin {
     }
     
     func initialize(config : Dictionary<String, Any>){
-        phylloConfig.clientDisplayName =  (config["clientDisplayName"] as? String)!
+        // phylloConfig.clientDisplayName =  (config["clientDisplayName"] as? String)!
+        // phylloConfig.token = "Bearer " + (config["token"] as? String)!
+        // phylloConfig.userId = (config["userId"] as? String)!
+        // phylloConfig.environment = getPhylloEnvironment(env: config["environment"] as? String)
+        // phylloConfig.workPlatformId = (config["workPlatformId"] as? String)!
+        print("initialize")
+        var phylloConfig = PhylloConfig()
+        phylloConfig.clientDisplayName = (config["clientDisplayName"] as? String)!
         phylloConfig.token = "Bearer " + (config["token"] as? String)!
         phylloConfig.userId = (config["userId"] as? String)!
         phylloConfig.environment = getPhylloEnvironment(env: config["environment"] as? String)
         phylloConfig.workPlatformId = (config["workPlatformId"] as? String)!
+        PhylloConnect.shared.initialize(config: phylloConfig)
     }
     
     func open() {
-        let phyllo = PhylloConnect.init(config: phylloConfig)
-        phyllo.open()
+        
+        PhylloConnect.shared.open()
+        print("open sdk")
     }
 }
