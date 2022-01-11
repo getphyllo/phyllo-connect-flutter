@@ -69,26 +69,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildExistingUserCheckbox() {
     var phylloController = context.read<PhylloProvider>();
-    return Padding(
-      padding: const EdgeInsets.only(left: 5, top: 10),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            width: 15,
-            height: 15,
-            child: Checkbox(
-              value: phylloController.isExistingUser,
-              activeColor: Colors.green,
-              onChanged: phylloController.userId != null
-                  ? phylloController.isExistingUserStatusChanged
-                  : null,
-            ),
-          ),
-          const SizedBox(width: 8),
-          const Text('Existing user'),
-        ],
-      ),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Checkbox(
+          value: phylloController.isExistingUser,
+          activeColor: Colors.green,
+          onChanged: phylloController.userId != null
+              ? phylloController.isExistingUserStatusChanged
+              : null,
+        ),
+        const Text('Existing user'),
+      ],
     );
   }
 }
