@@ -46,7 +46,15 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
                 val environment = call.argument<String>("environment")
                 val workPlatformId = call.argument<String>("workPlatformId")
 
-                initialize(clientDisplayName!!, userId!!, token!!, environment!!, workPlatformId!!)
+                initialize(
+                    clientDisplayName!!,
+                    userId!!,
+                    token!!,
+                    environment!!,
+                    workPlatformId!!,
+                    result
+                )
+                open()
             }
             "open" -> {
                 open()
@@ -83,7 +91,8 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
         userId: String,
         token: String,
         environment: String,
-        workPlatformId: String
+        workPlatformId: String,
+        @NonNull result: Result,
     ) {
 
         Log.d(logTag, "Initialize Phyllo Connect Sdk")
@@ -95,7 +104,6 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
             platformId = workPlatformId,
             environment = getPhylloEnvironment(environment),
             callback = object : ConnectCallback {
-
                 override fun onAccountConnected(platformId: String?, userId: String?) {
                     Log.d(logTag, "onAccountConnected $platformId  $userId")
                 }
@@ -106,10 +114,12 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
 
                 override fun onError(errorMsg: String?) {
                     Log.d(logTag, "on Error errorMsg")
+                    result.error("Error", errorMsg, null)
                 }
 
                 override fun onTokenExpired() {
                     Log.d(logTag, "onTokenExpired")
+                    result.error("Token expired", "SDK token was expired", null)
                 }
 
                 override fun onEvent(event: PhylloConnect.EVENT) {
@@ -118,12 +128,13 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
 
                 override fun onExit() {
                     Log.d(logTag, "onExit")
+                    result.success("Sdk was closed")
                 }
             })
 
     }
 
-    private fun open(){
+    private fun open() {
         PhylloConnect.startSDK()
     }
 }
