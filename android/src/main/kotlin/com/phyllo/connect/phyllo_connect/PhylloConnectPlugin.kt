@@ -45,8 +45,8 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
                 val token = call.argument<String>("token")
                 val environment = call.argument<String>("environment")
                 val workPlatformId = call.argument<String>("workPlatformId")
-
-                initialize(clientDisplayName!!, userId!!, token!!, environment!!, workPlatformId!!)
+                initialize(clientDisplayName!!, userId!!, token!!, environment!!, workPlatformId!!,result)
+                open()
             }
             "open" -> {
                 open()
@@ -83,7 +83,8 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
         userId: String,
         token: String,
         environment: String,
-        workPlatformId: String
+        workPlatformId: String,
+        @NonNull result: Result
     ) {
 
         Log.d(logTag, "Initialize Phyllo Connect Sdk")
@@ -118,6 +119,7 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
 
                 override fun onExit() {
                     Log.d(logTag, "onExit")
+                    result.success("Closed phyllo sdk")
                 }
             })
 
