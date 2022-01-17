@@ -45,7 +45,7 @@ android {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.getphyllo.fluttersample"
         minSdkVersion 21
-        targetSdkVersion 30 //flutter.targetSdkVersion
+        targetSdkVersion 29 //flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
