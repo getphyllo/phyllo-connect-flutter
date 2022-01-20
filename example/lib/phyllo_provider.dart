@@ -66,6 +66,21 @@ class PhylloProvider extends DefaultChangeNotifier {
     );
     PhylloConnect.initialize(config);
     PhylloConnect.open();
+
+    PhylloConnect.onPhylloConnectCallback(
+      onAccountConnected: (accountId, platformId, userId) {
+        debugPrint('Account connected: $accountId, $platformId, $userId');
+      },
+      onAccountDisconnected: (accountId, platformId, userId) {
+        debugPrint('Account disconnected: $accountId, $platformId, $userId');
+      },
+      onTokenExpried: (userId) {
+        debugPrint('Token Expired: $userId');
+      },
+      onExit: (reason, userId) {
+        debugPrint('Exit: $reason, $userId');
+      },
+    );
   }
 
   Future<String?> getPhylloEnvironmentUrl(PhylloEnvironment environment) async {

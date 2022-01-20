@@ -5,17 +5,17 @@ import PhylloConnect
 
 public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, PhylloConnectDelegate {
     
-    var channel = FlutterMethodChannel()
-     //var delegate : IDelegate
     
-    // init(pluginRegistrar: FlutterPluginRegistrar) {
-    //     delegate = PhylloConnectPluginDelegate(registrar: pluginRegistrar)
-    // }
+     var method : FlutterMethodChannel?
+    
+     init(pluginRegistrar: FlutterPluginRegistrar) {
+         method = FlutterMethodChannel(name: "phyllo_connect", binaryMessenger: pluginRegistrar.messenger())
+     }
 
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let instance = SwiftPhylloConnectPlugin()
-        instance.channel = FlutterMethodChannel(name: "phyllo_connect", binaryMessenger: registrar.messenger())
-        registrar.addMethodCallDelegate(instance, channel: instance.channel)
+        let channel = FlutterMethodChannel(name: "phyllo_connect", binaryMessenger: registrar.messenger())
+        let instance = SwiftPhylloConnectPlugin(pluginRegistrar: registrar)
+        registrar.addMethodCallDelegate(instance, channel: channel)    
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -78,7 +78,7 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, PhylloConnectDel
         result["accountId"] = account_id
         result["platformId"] = work_platform_id
         result["userId"] = user_id
-        channel.invokeMethod("onAccountConnected", arguments: result)
+       method!.invokeMethod("onAccountConnected", arguments: result)
     }
     
    public func onAccountDisconnected(account_id: String, work_platform_id: String, user_id: String) {
@@ -87,12 +87,12 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, PhylloConnectDel
         result["accountId"] = account_id
         result["platformId"] = work_platform_id
         result["userId"] = user_id
-        channel.invokeMethod("onAccountDisconnected", arguments: result)
+       method!.invokeMethod("onAccountDisconnected", arguments: result)
     }
     
    public func onTokenExpired(user_id: String) {
         print("onTokenExpired => user_id : \(user_id)")
-        channel.invokeMethod("onTokenExpired", arguments: user_id)
+       method?.invokeMethod("onTokenExpired", arguments: user_id)
     }
     
    public func onExit(reason: String, user_id: String) {
@@ -100,7 +100,7 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, PhylloConnectDel
         var result = [String : Any]()
         result["reason"] = reason
         result["userId"] = user_id
-        channel.invokeMethod("onExit", arguments: result)
+       method!.invokeMethod("onExit", arguments: result)
     }
 }
 
