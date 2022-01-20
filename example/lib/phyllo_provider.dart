@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:phyllo_connect/phyllo_connect.dart';
 import 'package:phyllo_connect_example/client/phyllo_repository.dart';

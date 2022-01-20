@@ -5,10 +5,12 @@ import PhylloConnect
 
 public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin {
     
+    var channel = FlutterMethodChannel()
+    
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: "phyllo_connect", binaryMessenger: registrar.messenger())
         let instance = SwiftPhylloConnectPlugin()
-        registrar.addMethodCallDelegate(instance, channel: channel)
+        instance.channel = FlutterMethodChannel(name: "phyllo_connect", binaryMessenger: registrar.messenger())
+        registrar.addMethodCallDelegate(instance, channel: instance.channel)
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -48,11 +50,7 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin {
     }
     
     func initialize(config : Dictionary<String, Any>){
-        // phylloConfig.clientDisplayName =  (config["clientDisplayName"] as? String)!
-        // phylloConfig.token = "Bearer " + (config["token"] as? String)!
-        // phylloConfig.userId = (config["userId"] as? String)!
-        // phylloConfig.environment = getPhylloEnvironment(env: config["environment"] as? String)
-        // phylloConfig.workPlatformId = (config["workPlatformId"] as? String)!
+       
         print("initialize")
         var phylloConfig = PhylloConfig()
         phylloConfig.clientDisplayName = (config["clientDisplayName"] as? String)!
@@ -64,8 +62,34 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin {
     }
     
     func open() {
-        
         PhylloConnect.shared.open()
         print("open sdk")
+    }
+    
+    func onAccountConnected(account_id: String, work_platform_id: String, user_id: String) {
+        var result = [String : Any]()
+        result["accountId"] = account_id
+        result["platformId"] = work_platform_id
+        result["userId"] = user_id
+        channel.invokeMethod("onAccountConnected", arguments: result)
+    }
+    
+    func onAccountDisconnected(account_id: String, work_platform_id: String, user_id: String) {
+        var result = [String : Any]()
+        result["accountId"] = account_id
+        result["platformId"] = work_platform_id
+        result["userId"] = user_id
+        channel.invokeMethod("onAccountDisconnected", arguments: result)
+    }
+    
+    func onTokenExpired(user_id: String) {
+        channel.invokeMethod("onTokenExpired", arguments: user_id)
+    }
+    
+    func onExit(reason: String, user_id: String) {
+        var result = [String : Any]()
+        result["reason"] = reason
+        result["userId"] = user_id
+        channel.invokeMethod("onExit", arguments: result)
     }
 }
