@@ -3,10 +3,15 @@ import UIKit
 import PhylloConnect
 
 
-public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin {
+public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, PhylloConnectDelegate {
     
     var channel = FlutterMethodChannel()
+     //var delegate : IDelegate
     
+    // init(pluginRegistrar: FlutterPluginRegistrar) {
+    //     delegate = PhylloConnectPluginDelegate(registrar: pluginRegistrar)
+    // }
+
     public static func register(with registrar: FlutterPluginRegistrar) {
         let instance = SwiftPhylloConnectPlugin()
         instance.channel = FlutterMethodChannel(name: "phyllo_connect", binaryMessenger: registrar.messenger())
@@ -59,14 +64,16 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin {
         phylloConfig.environment = getPhylloEnvironment(env: config["environment"] as? String)
         phylloConfig.workPlatformId = (config["workPlatformId"] as? String)!
         PhylloConnect.shared.initialize(config: phylloConfig)
+        PhylloConnect.shared.phylloConnectDelegate = self
     }
     
-    func open() {
+   public func open() {
         PhylloConnect.shared.open()
         print("open sdk")
     }
     
-    func onAccountConnected(account_id: String, work_platform_id: String, user_id: String) {
+   public func onAccountConnected(account_id: String, work_platform_id: String, user_id: String) {
+        print("onAccountConnected => account_id : \(account_id),work_platform_id : \(work_platform_id),user_id : \(user_id)")
         var result = [String : Any]()
         result["accountId"] = account_id
         result["platformId"] = work_platform_id
@@ -74,7 +81,8 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin {
         channel.invokeMethod("onAccountConnected", arguments: result)
     }
     
-    func onAccountDisconnected(account_id: String, work_platform_id: String, user_id: String) {
+   public func onAccountDisconnected(account_id: String, work_platform_id: String, user_id: String) {
+        print("onAccountDisconnected => account_id : \(account_id),work_platform_id : \(work_platform_id),user_id : \(user_id)")
         var result = [String : Any]()
         result["accountId"] = account_id
         result["platformId"] = work_platform_id
@@ -82,14 +90,32 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin {
         channel.invokeMethod("onAccountDisconnected", arguments: result)
     }
     
-    func onTokenExpired(user_id: String) {
+   public func onTokenExpired(user_id: String) {
+        print("onTokenExpired => user_id : \(user_id)")
         channel.invokeMethod("onTokenExpired", arguments: user_id)
     }
     
-    func onExit(reason: String, user_id: String) {
+   public func onExit(reason: String, user_id: String) {
+        print("onExit => reason : \(reason),user_id : \(user_id)")
         var result = [String : Any]()
         result["reason"] = reason
         result["userId"] = user_id
         channel.invokeMethod("onExit", arguments: result)
     }
 }
+
+// protocol IDelegate {
+    
+//     func onAccountConnected(account_id:String,work_platform_id:String, user_id:String)
+//     func onAccountDisconnected(account_id:String,work_platform_id:String, user_id:String)
+//     func onTokenExpired(user_id:String)
+//     func onExit(reason:String,user_id:String)
+// }
+
+// class PhylloConnectPluginDelegate : IDelegate,  PhylloConnectDelegate {
+
+//     private let flutterRegistrar: FlutterPluginRegistrar
+//     init(registrar: FlutterPluginRegistrar) {
+//         self.flutterRegistrar = registrar
+//     }
+// }
