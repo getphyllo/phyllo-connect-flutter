@@ -55,8 +55,8 @@ void _launchSdk(String workPlatformId) {
       log('onAccountConnected: $account_id, $work_platform_id, $user_id');
     }, onAccountDisconnected: (account_id, work_platform_id, user_id) {
       log('onAccountDisconnected: $account_id, $work_platform_id, $user_id');
-    }, onToeknExpired: (user_id) {
-      log('onToeknExpired: $user_id');
+    }, onTokenExpired: (user_id) {
+      log('onTokenExpired: $user_id');
     }, onExit: (reason, user_id) {
       log('onExit: $reason, $user_id');
     });
