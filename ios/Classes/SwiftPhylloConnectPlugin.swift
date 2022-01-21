@@ -3,19 +3,26 @@ import UIKit
 import PhylloConnect
 
 
-public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, PhylloConnectDelegate {
+public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHandler,
+                                       PhylloConnectDelegate {
+    
+    private var onAccountConnected: FlutterEventSink?
+    private var onAccountDisconnected: FlutterEventSink?
+    private var onTokenExpired: FlutterEventSink?
+    private var onExit: FlutterEventSink?
     
     
-     var method : FlutterMethodChannel?
-    
-     init(pluginRegistrar: FlutterPluginRegistrar) {
-         method = FlutterMethodChannel(name: "phyllo_connect", binaryMessenger: pluginRegistrar.messenger())
-     }
-
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "phyllo_connect", binaryMessenger: registrar.messenger())
-        let instance = SwiftPhylloConnectPlugin(pluginRegistrar: registrar)
-        registrar.addMethodCallDelegate(instance, channel: channel)    
+        
+        let instance = SwiftPhylloConnectPlugin()
+        
+        let eventChannel = FlutterEventChannel(
+            name: "phyllo_connects/connect_callback",
+            binaryMessenger: registrar.messenger())
+        eventChannel.setStreamHandler(instance)
+        
+        registrar.addMethodCallDelegate(instance, channel: channel)
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -41,6 +48,33 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, PhylloConnectDel
         }
     }
     
+    public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+        if arguments as? String == "onAccountConnected" {
+            onAccountConnected = events
+        } else if arguments as? String == "onAccountDisconnected" {
+            onAccountDisconnected = events
+        }else if arguments as? String == "onTokenExpired" {
+            onAccountDisconnected = events
+        }else if arguments as? String == "onExit" {
+            onExit = events
+        }
+        return nil
+    }
+    
+    public func onCancel(withArguments arguments: Any?) -> FlutterError? {
+        if arguments as? String == "onAccountConnected" {
+            onAccountConnected = nil
+        } else if arguments as? String == "onAccountDisconnected" {
+            onAccountDisconnected = nil
+        } else if arguments as? String == "onTokenExpired" {
+            onAccountDisconnected = nil
+        } else if arguments as? String == "onExit" {
+            onExit = nil
+        }
+        return nil
+    }
+    
+    
     public func getPhylloEnvironment(env :String?) -> PhylloEnvironment {
         switch (env) {
         case ("development"):
@@ -55,8 +89,8 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, PhylloConnectDel
     }
     
     func initialize(config : Dictionary<String, Any>){
+        
        
-        print("initialize")
         var phylloConfig = PhylloConfig()
         phylloConfig.clientDisplayName = (config["clientDisplayName"] as? String)!
         phylloConfig.token = "Bearer " + (config["token"] as? String)!
@@ -65,57 +99,54 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, PhylloConnectDel
         phylloConfig.workPlatformId = (config["workPlatformId"] as? String)!
         PhylloConnect.shared.initialize(config: phylloConfig)
         PhylloConnect.shared.phylloConnectDelegate = self
+        
+        print("Initialize Phyllo Connect Sdk")
     }
     
-   public func open() {
+    public func open() {
         PhylloConnect.shared.open()
-        print("open sdk")
+        print("Open Phyllo Connect Sdk")
     }
     
-   public func onAccountConnected(account_id: String, work_platform_id: String, user_id: String) {
-        print("onAccountConnected => account_id : \(account_id),work_platform_id : \(work_platform_id),user_id : \(user_id)")
+    public func onAccountConnected(account_id: String, work_platform_id: String, user_id: String) {
+        print("onAccountConnected => account_id : \(account_id), work_platform_id : \(work_platform_id), user_id : \(user_id)")
+        
         var result = [String : Any]()
-        result["accountId"] = account_id
-        result["platformId"] = work_platform_id
-        result["userId"] = user_id
-       method!.invokeMethod("onAccountConnected", arguments: result)
+        result["account_id"] = account_id
+        result["work_platform_id"] = work_platform_id
+        result["user_id"] = user_id
+        
+        guard let sink = onAccountConnected else { return }
+        sink(result)
     }
     
-   public func onAccountDisconnected(account_id: String, work_platform_id: String, user_id: String) {
-        print("onAccountDisconnected => account_id : \(account_id),work_platform_id : \(work_platform_id),user_id : \(user_id)")
+    public func onAccountDisconnected(account_id: String, work_platform_id: String, user_id: String) {
+        print("onAccountDisconnected => account_id : \(account_id), work_platform_id : \(work_platform_id), user_id : \(user_id)")
+        
         var result = [String : Any]()
-        result["accountId"] = account_id
-        result["platformId"] = work_platform_id
-        result["userId"] = user_id
-       method!.invokeMethod("onAccountDisconnected", arguments: result)
+        result["account_id"] = account_id
+        result["work_platform_id"] = work_platform_id
+        result["user_id"] = user_id
+        
+        guard let sink = onAccountDisconnected else { return }
+        sink(result)
     }
     
-   public func onTokenExpired(user_id: String) {
+    public func onTokenExpired(user_id: String) {
         print("onTokenExpired => user_id : \(user_id)")
-       method?.invokeMethod("onTokenExpired", arguments: user_id)
+        
+        guard let sink = onTokenExpired else { return }
+        sink(user_id)
     }
     
-   public func onExit(reason: String, user_id: String) {
-        print("onExit => reason : \(reason),user_id : \(user_id)")
+    public func onExit(reason: String, user_id: String) {
+        print("onExit => reason : \(reason), user_id : \(user_id)")
+        
         var result = [String : Any]()
         result["reason"] = reason
-        result["userId"] = user_id
-       method!.invokeMethod("onExit", arguments: result)
+        result["user_id"] = user_id
+        
+        guard let sink = onExit else { return }
+        sink(result)
     }
 }
-
-// protocol IDelegate {
-    
-//     func onAccountConnected(account_id:String,work_platform_id:String, user_id:String)
-//     func onAccountDisconnected(account_id:String,work_platform_id:String, user_id:String)
-//     func onTokenExpired(user_id:String)
-//     func onExit(reason:String,user_id:String)
-// }
-
-// class PhylloConnectPluginDelegate : IDelegate,  PhylloConnectDelegate {
-
-//     private let flutterRegistrar: FlutterPluginRegistrar
-//     init(registrar: FlutterPluginRegistrar) {
-//         self.flutterRegistrar = registrar
-//     }
-// }

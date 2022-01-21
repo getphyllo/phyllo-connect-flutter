@@ -11,21 +11,36 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+import io.flutter.plugin.common.EventChannel
+import java.util.logging.StreamHandler
+
 
 /** PhylloConnectPlugin */
-class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
+class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.StreamHandler {
     /// The MethodChannel that will the communication between Flutter and native Android
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
     /// when the Flutter Engine is detached from the Activity
     private lateinit var channel: MethodChannel
+    private lateinit var eventChannel: EventChannel
     private lateinit var context: Context
+
+    private var onAccountConnected: EventChannel.EventSink? = null
+    private var onAccountDisconnected: EventChannel.EventSink? = null
+    private var onTokenExpired: EventChannel.EventSink? = null
+    private var onExit: EventChannel.EventSink? = null
+
 
     val logTag: String = "PhylloConnect"
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "phyllo_connect")
         channel.setMethodCallHandler(this)
+
+        eventChannel =
+            EventChannel(flutterPluginBinding.binaryMessenger, "phyllo_connects/connect_callback")
+        eventChannel.setStreamHandler(this)
+
         this.context = flutterPluginBinding.applicationContext
     }
 
@@ -53,6 +68,40 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
             }
             else -> {
                 result.notImplemented()
+            }
+        }
+    }
+
+    override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+        when (arguments) {
+            "onAccountConnected" -> {
+                onAccountConnected = events!!
+            }
+            "onAccountDisconnected" -> {
+                onAccountDisconnected = events!!
+            }
+            "onTokenExpired" -> {
+                onTokenExpired = events!!
+            }
+            "onExit" -> {
+                onExit = events!!
+            }
+        }
+    }
+
+    override fun onCancel(arguments: Any?) {
+        when (arguments) {
+            "onAccountConnected" -> {
+                onAccountConnected = null
+            }
+            "onAccountDisconnected" -> {
+                onAccountDisconnected = null
+            }
+            "onTokenExpired" -> {
+                onTokenExpired = null
+            }
+            "onExit" -> {
+                onExit = null
             }
         }
     }
@@ -97,82 +146,81 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
             callback = object : ConnectCallback {
 
                 override fun onAccountConnected(
-                    accountId: String?,
-                    platformId: String?,
-                    userId: String?
+                    account_id: String?,
+                    work_platform_id: String?,
+                    user_id: String?
                 ) {
-                    Log.d(logTag, "onAccountConnected $accountId $platformId  $userId")
-                    onPhylloAccountConnected(accountId, platformId, userId)
+                    Log.d(logTag, "onAccountConnected $account_id $work_platform_id $user_id")
+                    onPhylloAccountConnected(account_id, work_platform_id, user_id)
                 }
 
                 override fun onAccountDisconnected(
-                    accountId: String?,
-                    platformId: String?,
-                    userId: String?
+                    account_id: String?,
+                    work_platform_id: String?,
+                    user_id: String?
                 ) {
-                    Log.d(logTag, "onAccountDisconnected $accountId $platformId  $userId")
-                    onPhylloAccountDisconnected(accountId, platformId, userId)
+                    Log.d(logTag, "onAccountDisconnected $account_id $work_platform_id $user_id")
+                    onPhylloAccountDisconnected(account_id, work_platform_id, user_id)
                 }
 
                 override fun onError(errorMsg: String?) {
                     Log.d(logTag, "onError $errorMsg")
                 }
 
-                override fun onTokenExpired(userId: String?) {
-                    Log.d(logTag, "onTokenExpired $userId")
-                    onPhylloTokenExpired(userId)
+                override fun onTokenExpired(user_id: String?) {
+                    Log.d(logTag, "onTokenExpired $user_id")
+                    onPhylloTokenExpired(user_id)
                 }
 
                 override fun onEvent(event: PhylloConnect.EVENT) {
                     Log.d(logTag, "onEvent $event")
                 }
 
-                override fun onExit(reason: String?, userId: String?) {
-                    Log.d(logTag, "onExit $reason $userId")
-                    onPhylloExit(reason, userId)
+                override fun onExit(reason: String?, user_id: String?) {
+                    Log.d(logTag, "onExit $reason $user_id")
+                    onPhylloExit(reason, user_id)
                 }
             })
 
     }
 
     private fun open() {
+        Log.d(logTag,"Open Phyllo Connect Sdk")
         PhylloConnect.open()
     }
 
-
     private fun onPhylloAccountConnected(
-        accountId: String?,
-        platformId: String?,
-        userId: String?
+        account_id: String?,
+        work_platform_id: String?,
+        user_id: String?
     ) {
         val result: MutableMap<String, Any?> = HashMap()
-        result["accountId"] = accountId
-        result["platformId"] = platformId
-        result["userId"] = userId
-        channel.invokeMethod("onAccountConnected", result)
+        result["account_id"] = account_id
+        result["work_platform_id"] = work_platform_id
+        result["user_id"] = user_id
+        onAccountConnected?.success(result)
     }
 
     private fun onPhylloAccountDisconnected(
-        accountId: String?,
-        platformId: String?,
-        userId: String?
+        account_id: String?,
+        work_platform_id: String?,
+        user_id: String?
     ) {
         val result: MutableMap<String, Any?> = HashMap()
-        result["accountId"] = accountId
-        result["platformId"] = platformId
-        result["›"] = userId
-        channel.invokeMethod("onAccountDisconnected", result)
+        result["account_id"] = account_id
+        result["work_platform_id"] = work_platform_id
+        result["user_id"] = user_id
+        onAccountDisconnected?.success(result)
     }
 
-    private fun onPhylloTokenExpired(userId: String?) {
-        channel.invokeMethod("onTokenExpired", userId)
+    private fun onPhylloTokenExpired(user_id: String?) {
+        onTokenExpired?.success(user_id)
     }
 
-    private fun onPhylloExit(reason: String?, userId: String?) {
+    private fun onPhylloExit(reason: String?, user_id: String?) {
         val result: MutableMap<String, Any?> = HashMap()
         result["reason"] = reason
-        result["userId"] = userId
-        channel.invokeMethod("onExit", result)
+        result["user_id"] = user_id
+        onExit?.success(result)
     }
-
 }

@@ -1,4 +1,7 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:phyllo_connect/phyllo_connect.dart';
@@ -26,6 +29,7 @@ class PhylloProvider extends DefaultChangeNotifier {
   static String? _token;
   static String? _userId;
 
+  final PhylloConnect _phylloConnect = PhylloConnect.instance;
   final PhylloRepository _phylloRepository = PhylloRepository.instance;
   //
   void launchSdk(String workPlatformId) async {
@@ -44,6 +48,7 @@ class PhylloProvider extends DefaultChangeNotifier {
           // Get UserId
           _userId = await getUserId(env);
           if (_userId != null) {
+            // Get Token
             _token = await getSdkToken(env, _userId!);
             if (_token != null) {
               _launchSdk(workPlatformId);
@@ -64,28 +69,32 @@ class PhylloProvider extends DefaultChangeNotifier {
       token: _token!,
       workPlatformId: workPlatformId,
     );
-    PhylloConnect.initialize(config);
-    PhylloConnect.open();
+    _phylloConnect.initialize(config);
+    _phylloConnect.open();
 
-    PhylloConnect.onPhylloConnectCallback(
-      onAccountConnected: (accountId, platformId, userId) {
-        debugPrint('Account connected: $accountId, $platformId, $userId');
-      },
-      onAccountDisconnected: (accountId, platformId, userId) {
-        debugPrint('Account disconnected: $accountId, $platformId, $userId');
-      },
-      onTokenExpried: (userId) {
-        debugPrint('Token Expired: $userId');
-      },
-      onExit: (reason, userId) {
-        debugPrint('Exit: $reason, $userId');
-      },
-    );
+
+    // Call Connect Callback
+    _phylloConnect.onAccountConnected((account_id, work_platform_id, user_id) {
+      log('onAccountConnected: $account_id, $work_platform_id, $user_id');
+    });
+
+    _phylloConnect
+        .onAccountDisconnected((account_id, work_platform_id, user_id) {
+      log('onAccountDisconnected: $account_id, $work_platform_id, $user_id');
+    });
+
+    _phylloConnect.onToeknExpired((user_id) {
+      log('onToeknExpired: $user_id');
+    });
+
+    _phylloConnect.onExit((reason, user_id) {
+      log('onExit: $reason, $user_id');
+    });
   }
 
   Future<String?> getPhylloEnvironmentUrl(PhylloEnvironment environment) async {
     try {
-      String? env = await PhylloConnect.getPhylloEnvironmentUrl(environment);
+      String? env = await _phylloConnect.getPhylloEnvironmentUrl(environment);
       return env!;
     } catch (e) {
       debugPrint(e.toString());
