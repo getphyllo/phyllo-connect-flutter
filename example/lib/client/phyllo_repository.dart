@@ -7,7 +7,7 @@ import 'package:phyllo_connect_example/constants/generate_radom_string.dart';
 class PhylloRepository {
   PhylloRepository._();
 
-  static final PhylloRepository instance = PhylloRepository._();
+  static PhylloRepository get instance => PhylloRepository._();
 
   final Http _http = Http();
 

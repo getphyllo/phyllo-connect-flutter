@@ -11,21 +11,32 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+import io.flutter.plugin.common.EventChannel
+import java.util.logging.StreamHandler
+
 
 /** PhylloConnectPlugin */
-class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
+class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.StreamHandler {
     /// The MethodChannel that will the communication between Flutter and native Android
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
     /// when the Flutter Engine is detached from the Activity
     private lateinit var channel: MethodChannel
+    private lateinit var eventChannel: EventChannel
     private lateinit var context: Context
+
+    private var onEventSink: EventChannel.EventSink? = null
 
     val logTag: String = "PhylloConnect"
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "phyllo_connect")
         channel.setMethodCallHandler(this)
+
+        eventChannel =
+            EventChannel(flutterPluginBinding.binaryMessenger, "phyllo_connects/connect_callback")
+        eventChannel.setStreamHandler(this)
+
         this.context = flutterPluginBinding.applicationContext
     }
 
@@ -55,6 +66,14 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
                 result.notImplemented()
             }
         }
+    }
+
+    override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+        onEventSink = events
+    }
+
+    override fun onCancel(arguments: Any?) {
+        onEventSink  = null
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
@@ -96,34 +115,88 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
             environment = getPhylloEnvironment(environment),
             callback = object : ConnectCallback {
 
-                override fun onAccountConnected(platformId: String?, userId: String?) {
-                    Log.d(logTag, "onAccountConnected $platformId  $userId")
+                override fun onAccountConnected(
+                    account_id: String?,
+                    work_platform_id: String?,
+                    user_id: String?
+                ) {
+                    Log.d(logTag, "onAccountConnected $account_id $work_platform_id $user_id")
+                    onPhylloAccountConnected(account_id, work_platform_id, user_id)
                 }
 
-                override fun onAccountDisconnected(platformId: String?, userId: String?) {
-                    Log.d(logTag, "onAccountDisconnected $platformId  $userId")
+                override fun onAccountDisconnected(
+                    account_id: String?,
+                    work_platform_id: String?,
+                    user_id: String?
+                ) {
+                    Log.d(logTag, "onAccountDisconnected $account_id $work_platform_id $user_id")
+                    onPhylloAccountDisconnected(account_id, work_platform_id, user_id)
                 }
 
                 override fun onError(errorMsg: String?) {
-                    Log.d(logTag, "on Error errorMsg")
+                    Log.d(logTag, "onError $errorMsg")
                 }
 
-                override fun onTokenExpired() {
-                    Log.d(logTag, "onTokenExpired")
+                override fun onTokenExpired(user_id: String?) {
+                    Log.d(logTag, "onTokenExpired $user_id")
+                    onPhylloTokenExpired(user_id)
                 }
 
                 override fun onEvent(event: PhylloConnect.EVENT) {
                     Log.d(logTag, "onEvent $event")
                 }
 
-                override fun onExit() {
-                    Log.d(logTag, "onExit")
+                override fun onExit(reason: String?, user_id: String?) {
+                    Log.d(logTag, "onExit $reason $user_id")
+                    onPhylloExit(reason, user_id)
                 }
             })
 
     }
 
-    private fun open(){
-        PhylloConnect.startSDK()
+    private fun open() {
+        Log.d(logTag,"Open Phyllo Connect Sdk")
+        PhylloConnect.open()
+    }
+
+    private fun onPhylloAccountConnected(
+        account_id: String?,
+        work_platform_id: String?,
+        user_id: String?
+    ) {
+        val result: MutableMap<String, Any?> = HashMap()
+        result["callback"] = "onAccountConnected"
+        result["account_id"] = account_id
+        result["work_platform_id"] = work_platform_id
+        result["user_id"] = user_id
+        onEventSink?.success(result)
+    }
+
+    private fun onPhylloAccountDisconnected(
+        account_id: String?,
+        work_platform_id: String?,
+        user_id: String?
+    ) {
+        val result: MutableMap<String, Any?> = HashMap()
+        result["callback"] = "onAccountDisconnected"
+        result["account_id"] = account_id
+        result["work_platform_id"] = work_platform_id
+        result["user_id"] = user_id
+        onEventSink?.success(result)
+    }
+
+    private fun onPhylloTokenExpired(user_id: String?) {
+        val result: MutableMap<String, Any?> = HashMap()
+        result["callback"] = "onTokenExpired"
+        result["user_id"] = user_id
+        onEventSink?.success(result)
+    }
+
+    private fun onPhylloExit(reason: String?, user_id: String?) {
+        val result: MutableMap<String, Any?> = HashMap()
+        result["callback"] = "onExit"
+        result["reason"] = reason
+        result["user_id"] = user_id
+        onEventSink?.success(result)
     }
 }

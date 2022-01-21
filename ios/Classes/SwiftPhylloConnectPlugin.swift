@@ -3,11 +3,22 @@ import UIKit
 import PhylloConnect
 
 
-public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin {
+public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHandler,
+                                       PhylloConnectDelegate {
+    
+    private var onEventSink: FlutterEventSink?
+    
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "phyllo_connect", binaryMessenger: registrar.messenger())
+        
         let instance = SwiftPhylloConnectPlugin()
+        
+        let eventChannel = FlutterEventChannel(
+            name: "phyllo_connects/connect_callback",
+            binaryMessenger: registrar.messenger())
+        eventChannel.setStreamHandler(instance)
+        
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
     
@@ -34,6 +45,17 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin {
         }
     }
     
+    public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+        onEventSink = events
+        return nil
+    }
+    
+    public func onCancel(withArguments arguments: Any?) -> FlutterError? {
+        onEventSink = nil
+        return nil
+    }
+    
+    
     public func getPhylloEnvironment(env :String?) -> PhylloEnvironment {
         switch (env) {
         case ("development"):
@@ -48,12 +70,8 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin {
     }
     
     func initialize(config : Dictionary<String, Any>){
-        // phylloConfig.clientDisplayName =  (config["clientDisplayName"] as? String)!
-        // phylloConfig.token = "Bearer " + (config["token"] as? String)!
-        // phylloConfig.userId = (config["userId"] as? String)!
-        // phylloConfig.environment = getPhylloEnvironment(env: config["environment"] as? String)
-        // phylloConfig.workPlatformId = (config["workPlatformId"] as? String)!
-        print("initialize")
+        
+       
         var phylloConfig = PhylloConfig()
         phylloConfig.clientDisplayName = (config["clientDisplayName"] as? String)!
         phylloConfig.token = "Bearer " + (config["token"] as? String)!
@@ -61,11 +79,62 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin {
         phylloConfig.environment = getPhylloEnvironment(env: config["environment"] as? String)
         phylloConfig.workPlatformId = (config["workPlatformId"] as? String)!
         PhylloConnect.shared.initialize(config: phylloConfig)
+        PhylloConnect.shared.phylloConnectDelegate = self
+        
+        print("Initialize Phyllo Connect Sdk")
     }
     
-    func open() {
-        
+    public func open() {
         PhylloConnect.shared.open()
-        print("open sdk")
+        print("Open Phyllo Connect Sdk")
+    }
+    
+    public func onAccountConnected(account_id: String, work_platform_id: String, user_id: String) {
+        print("onAccountConnected => account_id : \(account_id), work_platform_id : \(work_platform_id), user_id : \(user_id)")
+        
+        var result = [String : Any]()
+        result["callback"] = "onAccountConnected"
+        result["account_id"] = account_id
+        result["work_platform_id"] = work_platform_id
+        result["user_id"] = user_id
+        
+        guard let sink = onEventSink else { return }
+        sink(result)
+    }
+    
+    public func onAccountDisconnected(account_id: String, work_platform_id: String, user_id: String) {
+        print("onAccountDisconnected => account_id : \(account_id), work_platform_id : \(work_platform_id), user_id : \(user_id)")
+        
+        var result = [String : Any]()
+        result["callback"] = "onAccountDisconnected"
+        result["account_id"] = account_id
+        result["work_platform_id"] = work_platform_id
+        result["user_id"] = user_id
+        
+        guard let sink = onEventSink else { return }
+        sink(result)
+    }
+    
+    public func onTokenExpired(user_id: String) {
+        print("onTokenExpired => user_id : \(user_id)")
+        
+        var result = [String : Any]()
+        result["callback"] = "onTokenExpired"
+        result["user_id"] = user_id
+        
+        guard let sink = onEventSink else { return }
+        sink(result)
+    }
+    
+    public func onExit(reason: String, user_id: String) {
+        print("onExit => reason : \(reason), user_id : \(user_id)")
+        
+        var result = [String : Any]()
+        result["callback"] = "onExit"
+        result["reason"] = reason
+        result["user_id"] = user_id
+        
+        guard let sink = onEventSink else { return }
+        sink(result)
     }
 }
