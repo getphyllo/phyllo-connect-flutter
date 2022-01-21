@@ -23,10 +23,10 @@ class Configs {
 
   static const String clientSecret = '<client secret here>';
 
-  static const PhylloEnvironment env = PhylloEnvironment.development; //set phyllo environment
+  static const PhylloEnvironment env = PhylloEnvironment.sanbox; //set phyllo environment
 }
 ```
-
+-> Lib -> phyllo_provider.dart
 
 ``` dart
 
@@ -35,6 +35,7 @@ import 'package:phyllo_connect/phyllo_connect.dart';
 import 'package:phyllo_connect_example/client/phyllo_repository.dart';
 import 'package:phyllo_connect_example/constants/configs.dart';
 
+final PhylloConnect _phylloConnect = PhylloConnect.instance;
 //Too Lunch the sdk here it will method 
 void _launchSdk(String workPlatformId) {
     PhylloConfig config = PhylloConfig(
@@ -44,8 +45,22 @@ void _launchSdk(String workPlatformId) {
       token: _token!,
       workPlatformId: workPlatformId,
     );
-    PhylloConnect.initialize(config);
-    PhylloConnect.open();
+
+    _phylloConnect.initialize(config);
+    _phylloConnect.open();
+
+    //Call Back from Android/iOS SDK
+    _phylloConnect.onConnectCallback(
+        onAccountConnected: (account_id, work_platform_id, user_id) {
+      log('onAccountConnected: $account_id, $work_platform_id, $user_id');
+    }, onAccountDisconnected: (account_id, work_platform_id, user_id) {
+      log('onAccountDisconnected: $account_id, $work_platform_id, $user_id');
+    }, onToeknExpired: (user_id) {
+      log('onToeknExpired: $user_id');
+    }, onExit: (reason, user_id) {
+      log('onExit: $reason, $user_id');
+    });
+
   }
 
 ```
