@@ -32,13 +32,3 @@ Runner/GeneratedPluginRegistrant.*
 !default.mode2v3
 !default.pbxuser
 !default.perspectivev3
-
-# Xcode per-user config
-*.mode1
-*.mode1v3
-*.mode2v3
-*.perspective
-*.perspectivev3
-*.pbxuser
-*.xcworkspace
-xcuserdata

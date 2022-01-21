@@ -25,11 +25,7 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
     private lateinit var eventChannel: EventChannel
     private lateinit var context: Context
 
-    private var onAccountConnected: EventChannel.EventSink? = null
-    private var onAccountDisconnected: EventChannel.EventSink? = null
-    private var onTokenExpired: EventChannel.EventSink? = null
-    private var onExit: EventChannel.EventSink? = null
-
+    private var onEventSink: EventChannel.EventSink? = null
 
     val logTag: String = "PhylloConnect"
 
@@ -73,37 +69,11 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
     }
 
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
-        when (arguments) {
-            "onAccountConnected" -> {
-                onAccountConnected = events!!
-            }
-            "onAccountDisconnected" -> {
-                onAccountDisconnected = events!!
-            }
-            "onTokenExpired" -> {
-                onTokenExpired = events!!
-            }
-            "onExit" -> {
-                onExit = events!!
-            }
-        }
+        onEventSink = events
     }
 
     override fun onCancel(arguments: Any?) {
-        when (arguments) {
-            "onAccountConnected" -> {
-                onAccountConnected = null
-            }
-            "onAccountDisconnected" -> {
-                onAccountDisconnected = null
-            }
-            "onTokenExpired" -> {
-                onTokenExpired = null
-            }
-            "onExit" -> {
-                onExit = null
-            }
-        }
+        onEventSink  = null
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
@@ -195,10 +165,11 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
         user_id: String?
     ) {
         val result: MutableMap<String, Any?> = HashMap()
+        result["callback"] = "onAccountConnected"
         result["account_id"] = account_id
         result["work_platform_id"] = work_platform_id
         result["user_id"] = user_id
-        onAccountConnected?.success(result)
+        onEventSink?.success(result)
     }
 
     private fun onPhylloAccountDisconnected(
@@ -207,20 +178,25 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
         user_id: String?
     ) {
         val result: MutableMap<String, Any?> = HashMap()
+        result["callback"] = "onAccountDisconnected"
         result["account_id"] = account_id
         result["work_platform_id"] = work_platform_id
         result["user_id"] = user_id
-        onAccountDisconnected?.success(result)
+        onEventSink?.success(result)
     }
 
     private fun onPhylloTokenExpired(user_id: String?) {
-        onTokenExpired?.success(user_id)
+        val result: MutableMap<String, Any?> = HashMap()
+        result["callback"] = "onTokenExpired"
+        result["user_id"] = user_id
+        onEventSink?.success(result)
     }
 
     private fun onPhylloExit(reason: String?, user_id: String?) {
         val result: MutableMap<String, Any?> = HashMap()
+        result["callback"] = "onExit"
         result["reason"] = reason
         result["user_id"] = user_id
-        onExit?.success(result)
+        onEventSink?.success(result)
     }
 }

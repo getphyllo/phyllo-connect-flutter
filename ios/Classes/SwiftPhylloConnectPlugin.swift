@@ -6,10 +6,7 @@ import PhylloConnect
 public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHandler,
                                        PhylloConnectDelegate {
     
-    private var onAccountConnected: FlutterEventSink?
-    private var onAccountDisconnected: FlutterEventSink?
-    private var onTokenExpired: FlutterEventSink?
-    private var onExit: FlutterEventSink?
+    private var onEventSink: FlutterEventSink?
     
     
     public static func register(with registrar: FlutterPluginRegistrar) {
@@ -49,28 +46,12 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
     }
     
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
-        if arguments as? String == "onAccountConnected" {
-            onAccountConnected = events
-        } else if arguments as? String == "onAccountDisconnected" {
-            onAccountDisconnected = events
-        }else if arguments as? String == "onTokenExpired" {
-            onAccountDisconnected = events
-        }else if arguments as? String == "onExit" {
-            onExit = events
-        }
+        onEventSink = events
         return nil
     }
     
     public func onCancel(withArguments arguments: Any?) -> FlutterError? {
-        if arguments as? String == "onAccountConnected" {
-            onAccountConnected = nil
-        } else if arguments as? String == "onAccountDisconnected" {
-            onAccountDisconnected = nil
-        } else if arguments as? String == "onTokenExpired" {
-            onAccountDisconnected = nil
-        } else if arguments as? String == "onExit" {
-            onExit = nil
-        }
+        onEventSink = nil
         return nil
     }
     
@@ -112,11 +93,12 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
         print("onAccountConnected => account_id : \(account_id), work_platform_id : \(work_platform_id), user_id : \(user_id)")
         
         var result = [String : Any]()
+        result["callback"] = "onAccountConnected"
         result["account_id"] = account_id
         result["work_platform_id"] = work_platform_id
         result["user_id"] = user_id
         
-        guard let sink = onAccountConnected else { return }
+        guard let sink = onEventSink else { return }
         sink(result)
     }
     
@@ -124,29 +106,35 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
         print("onAccountDisconnected => account_id : \(account_id), work_platform_id : \(work_platform_id), user_id : \(user_id)")
         
         var result = [String : Any]()
+        result["callback"] = "onAccountDisconnected"
         result["account_id"] = account_id
         result["work_platform_id"] = work_platform_id
         result["user_id"] = user_id
         
-        guard let sink = onAccountDisconnected else { return }
+        guard let sink = onEventSink else { return }
         sink(result)
     }
     
     public func onTokenExpired(user_id: String) {
         print("onTokenExpired => user_id : \(user_id)")
         
-        guard let sink = onTokenExpired else { return }
-        sink(user_id)
+        var result = [String : Any]()
+        result["callback"] = "onTokenExpired"
+        result["user_id"] = user_id
+        
+        guard let sink = onEventSink else { return }
+        sink(result)
     }
     
     public func onExit(reason: String, user_id: String) {
         print("onExit => reason : \(reason), user_id : \(user_id)")
         
         var result = [String : Any]()
+        result["callback"] = "onExit"
         result["reason"] = reason
         result["user_id"] = user_id
         
-        guard let sink = onExit else { return }
+        guard let sink = onEventSink else { return }
         sink(result)
     }
 }

@@ -56,36 +56,47 @@ class PhylloConnect {
     await _channel.invokeMethod('open');
   }
 
-  void onAccountConnected(Function(String, String, String) callback) {
-    _eventChannel.receiveBroadcastStream('onAccountConnected').listen((event) {
-      callback.call(
-        event['account_id'],
-        event['work_platform_id'],
-        event['user_id'],
-      );
-    }, cancelOnError: true);
-  }
+  void onConnectCallback({
+    /// onAccountConnected is called when the user has successfully connected to the platform.
+    /// 
+    Function(String, String, String)? onAccountConnected,
 
-  void onAccountDisconnected(Function(String, String, String) callback) {
-    _eventChannel.receiveBroadcastStream('onAccountDisconnected').listen(
-        (event) {
-      callback.call(
-        event['account_id'],
-        event['work_platform_id'],
-        event['user_id'],
-      );
-    }, cancelOnError: true);
-  }
+    /// onAccountDisconnected is called when the user has disconnected from the platform.
+    /// 
+    Function(String, String, String)? onAccountDisconnected,
 
-  void onToeknExpired(Function(String) callback) {
-    _eventChannel.receiveBroadcastStream('onToeknExpired').listen((event) {
-      callback.call(event['user_id']);
-    }, cancelOnError: true);
-  }
-
-  void onExit(Function(String, String) callback) {
-    _eventChannel.receiveBroadcastStream('onExit').listen((event) {
-      callback.call(event['reason'], event['user_id']);
+    /// onTokenExpired is called when the token has expired.
+    /// 
+    Function(String)? onToeknExpired,
+    
+    /// onExit is called when the user has exited the Phyllo Connect flow.
+    ///
+    Function(String, String)? onExit,
+  }) {
+    _eventChannel.receiveBroadcastStream().listen((event) {
+      switch (event['callback']) {
+        case 'onAccountConnected':
+          onAccountConnected?.call(
+            event['account_id'] ?? '',
+            event['work_platform_id'] ?? '',
+            event['user_id'] ?? '',
+          );
+          break;
+        case 'onAccountDisconnected':
+          onAccountDisconnected?.call(
+            event['account_id'] ?? '',
+            event['work_platform_id'] ?? '',
+            event['user_id'] ?? '',
+          );
+          break;
+        case 'onToeknExpired':
+          onToeknExpired?.call(event['user_id'] ?? '');
+          break;
+        case 'onExit':
+          onExit?.call(event['reason'] ?? '', event['user_id'] ?? '');
+          break;
+        default:
+      }
     }, cancelOnError: true);
   }
 }

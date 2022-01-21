@@ -72,22 +72,14 @@ class PhylloProvider extends DefaultChangeNotifier {
     _phylloConnect.initialize(config);
     _phylloConnect.open();
 
-
-    // Call Connect Callback
-    _phylloConnect.onAccountConnected((account_id, work_platform_id, user_id) {
+    _phylloConnect.onConnectCallback(
+        onAccountConnected: (account_id, work_platform_id, user_id) {
       log('onAccountConnected: $account_id, $work_platform_id, $user_id');
-    });
-
-    _phylloConnect
-        .onAccountDisconnected((account_id, work_platform_id, user_id) {
+    }, onAccountDisconnected: (account_id, work_platform_id, user_id) {
       log('onAccountDisconnected: $account_id, $work_platform_id, $user_id');
-    });
-
-    _phylloConnect.onToeknExpired((user_id) {
+    }, onToeknExpired: (user_id) {
       log('onToeknExpired: $user_id');
-    });
-
-    _phylloConnect.onExit((reason, user_id) {
+    }, onExit: (reason, user_id) {
       log('onExit: $reason, $user_id');
     });
   }
