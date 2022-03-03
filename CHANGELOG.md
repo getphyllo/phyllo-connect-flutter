@@ -1,3 +1,3 @@
-## 0.1.20
+## 0.1.21
 
-* call back and delegation added
+* font weight and ui improvement added 
