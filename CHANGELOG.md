@@ -1,3 +1,5 @@
-## 0.1.21
+## 0.1.24
 
-* font weight and ui improvement added 
+* fonts weight and UI improved
+* Added additional reason for exit callback EXIT_FROM_CONNECTION_FAILED
+* Button title “Add another {‘Platform name’} account” changing to “Add another account”
