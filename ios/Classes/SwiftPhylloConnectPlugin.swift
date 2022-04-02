@@ -81,9 +81,6 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
                                             workPlatformId: (config["workPlatformId"] as? String)!
                                         )
         PhylloConnect.shared.initialize(config: phylloConfig)
-        PhylloConnect.shared.phylloConnectDelegate = self
-        
-        print("Initialize Phyllo Connect Sdk")
     }
     
     public func open() {
