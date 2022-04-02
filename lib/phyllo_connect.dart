@@ -59,19 +59,19 @@ class PhylloConnect {
   void onConnectCallback({
     /// onAccountConnected is called when the user has successfully connected to the platform.
     ///
-    Function(String, String, String)? onAccountConnected,
+    required Function(String, String, String)? onAccountConnected,
 
     /// onAccountDisconnected is called when the user has disconnected from the platform.
     ///
-    Function(String, String, String)? onAccountDisconnected,
+    required Function(String, String, String)? onAccountDisconnected,
 
     /// onTokenExpired is called when the token has expired.
     ///
-    Function(String)? onTokenExpired,
+    required Function(String)? onTokenExpired,
 
     /// onExit is called when the user has exited the Phyllo Connect flow.
     ///
-    Function(String, String)? onExit,
+    required Function(String, String)? onExit,
   }) {
     _eventChannel.receiveBroadcastStream().listen((event) {
       switch (event['callback']) {
