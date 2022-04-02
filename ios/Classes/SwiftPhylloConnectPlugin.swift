@@ -76,7 +76,7 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
                                             environment: getPhylloEnvironment(env: config["environment"] as? String),
                                             clientDisplayName: (config["clientDisplayName"] as? String)!,
                                             token: "Bearer " + (config["token"] as? String)!,
-                                            userId: Constants.userId,
+                                            userId: (config["userId"] as? String)!,
                                             delegate:self,
                                             workPlatformId: (config["workPlatformId"] as? String)!
                                         )
