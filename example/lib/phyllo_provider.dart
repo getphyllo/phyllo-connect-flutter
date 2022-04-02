@@ -25,7 +25,7 @@ abstract class DefaultChangeNotifier extends ChangeNotifier {
 
 class PhylloProvider extends DefaultChangeNotifier {
   bool _isExistingUser = false;
-  static const String clientDisplayName = 'Phyllo Connect Example';
+  static const String clientDisplayName = 'Phyllo Test';
   static String? _token;
   static String? _userId;
 
