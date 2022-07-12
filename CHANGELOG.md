@@ -1,4 +1,4 @@
-## 0.1.25
+## 0.1.26
 
-* Instagram flow via Fb
-* Design fixes and improvement
+- Released the updated Instagram help guides
+- Updates error recovery screens : More precise and updated list of error messages will appear on SDK in case an account doesn’t gets connected.

@@ -75,7 +75,7 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
         let phylloConfig = PhylloConfig (
                                             environment: getPhylloEnvironment(env: config["environment"] as? String),
                                             clientDisplayName: (config["clientDisplayName"] as? String)!,
-                                            token: "Bearer " + (config["token"] as? String)!,
+                                            token: (config["token"] as? String)!,
                                             userId: (config["userId"] as? String)!,
                                             delegate:self,
                                             workPlatformId: (config["workPlatformId"] as? String)!
@@ -130,6 +130,18 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
         
         var result = [String : Any]()
         result["callback"] = "onExit"
+        result["reason"] = reason
+        result["user_id"] = user_id
+        
+        guard let sink = onEventSink else { return }
+        sink(result)
+    }
+
+   public func connectionFailure(reason: String, user_id: String) {
+             print("onExit => reason : \(reason), user_id : \(user_id)")
+        
+        var result = [String : Any]()
+        result["callback"] = "connectionFailure"
         result["reason"] = reason
         result["user_id"] = user_id
         

@@ -72,6 +72,9 @@ class PhylloConnect {
     /// onExit is called when the user has exited the Phyllo Connect flow.
     ///
     required Function(String, String)? onExit,
+
+    Function(String, String)? connectionFailure,
+
   }) {
     _eventChannel.receiveBroadcastStream().listen((event) {
       switch (event['callback']) {
@@ -94,6 +97,9 @@ class PhylloConnect {
           break;
         case 'onExit':
           onExit?.call(event['reason'] ?? '', event['user_id'] ?? '');
+          break;
+        case 'connectionFailure':
+          connectionFailure?.call(event['reason'] ?? '', event['user_id'] ?? '');
           break;
         default:
       }
