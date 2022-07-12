@@ -85,12 +85,9 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
     
     public func open() {
         PhylloConnect.shared.open()
-        print("Open Phyllo Connect Sdk")
     }
     
-    public func onAccountConnected(account_id: String, work_platform_id: String, user_id: String) {
-        print("onAccountConnected => account_id : \(account_id), work_platform_id : \(work_platform_id), user_id : \(user_id)")
-        
+    public func onAccountConnected(account_id: String, work_platform_id: String, user_id: String) {        
         var result = [String : Any]()
         result["callback"] = "onAccountConnected"
         result["account_id"] = account_id
@@ -102,8 +99,6 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
     }
     
     public func onAccountDisconnected(account_id: String, work_platform_id: String, user_id: String) {
-        print("onAccountDisconnected => account_id : \(account_id), work_platform_id : \(work_platform_id), user_id : \(user_id)")
-        
         var result = [String : Any]()
         result["callback"] = "onAccountDisconnected"
         result["account_id"] = account_id
@@ -114,9 +109,7 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
         sink(result)
     }
     
-    public func onTokenExpired(user_id: String) {
-        print("onTokenExpired => user_id : \(user_id)")
-        
+    public func onTokenExpired(user_id: String) {        
         var result = [String : Any]()
         result["callback"] = "onTokenExpired"
         result["user_id"] = user_id
@@ -125,9 +118,7 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
         sink(result)
     }
     
-    public func onExit(reason: String, user_id: String) {
-        print("onExit => reason : \(reason), user_id : \(user_id)")
-        
+    public func onExit(reason: String, user_id: String) {        
         var result = [String : Any]()
         result["callback"] = "onExit"
         result["reason"] = reason
@@ -137,9 +128,7 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
         sink(result)
     }
 
-   public func connectionFailure(reason: String, user_id: String) {
-             print("onExit => reason : \(reason), user_id : \(user_id)")
-        
+   public func connectionFailure(reason: String, user_id: String) {        
         var result = [String : Any]()
         result["callback"] = "connectionFailure"
         result["reason"] = reason
