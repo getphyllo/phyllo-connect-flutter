@@ -108,10 +108,10 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
         Log.d(logTag, "Initialize Phyllo Connect Sdk")
 
         PhylloConnect.initialize(context = context,
-            name = clientDisplayName,
+            clientDisplayName = clientDisplayName,
             userId = userId,
             token = token,
-            platformId = workPlatformId,
+            workPlatformId = workPlatformId,
             environment = getPhylloEnvironment(environment),
             callback = object : ConnectCallback {
 
@@ -133,17 +133,9 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
                     onPhylloAccountDisconnected(account_id, work_platform_id, user_id)
                 }
 
-                override fun onError(errorMsg: String?) {
-                    Log.d(logTag, "onError $errorMsg")
-                }
-
                 override fun onTokenExpired(user_id: String?) {
                     Log.d(logTag, "onTokenExpired $user_id")
                     onPhylloTokenExpired(user_id)
-                }
-
-                override fun onEvent(event: PhylloConnect.EVENT) {
-                    Log.d(logTag, "onEvent $event")
                 }
 
                 override fun onExit(reason: String?, user_id: String?) {

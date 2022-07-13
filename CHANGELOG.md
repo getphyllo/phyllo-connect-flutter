@@ -1,5 +1,4 @@
-## 0.1.24
+## 0.1.26
 
-* fonts weight and UI improved
-* Added additional reason for exit callback EXIT_FROM_CONNECTION_FAILED
-* Button title “Add another {‘Platform name’} account” changing to “Add another account”
+- Released the updated Instagram help guides
+- Updates error recovery screens : More precise and updated list of error messages will appear on SDK in case an account doesn’t gets connected.
