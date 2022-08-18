@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:phyllo_connect/phyllo_connect.dart';
 import 'package:phyllo_connect_example/client/phyllo_repository.dart';
 import 'package:phyllo_connect_example/constants/configs.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 abstract class DefaultChangeNotifier extends ChangeNotifier {
   bool _loading = false;
@@ -75,13 +76,34 @@ class PhylloProvider extends DefaultChangeNotifier {
     _phylloConnect.onConnectCallback(
         onAccountConnected: (account_id, work_platform_id, user_id) {
       log('onAccountConnected: $account_id, $work_platform_id, $user_id');
+      showToast('onAccountConnected: $account_id, $work_platform_id, $user_id');
     }, onAccountDisconnected: (account_id, work_platform_id, user_id) {
       log('onAccountDisconnected: $account_id, $work_platform_id, $user_id');
+      showToast(
+          'onAccountDisconnected: $account_id, $work_platform_id, $user_id');
     }, onTokenExpired: (user_id) {
       log('onTokenExpired: $user_id');
+      showToast('onTokenExpired: $user_id');
     }, onExit: (reason, user_id) {
       log('onExit: $reason, $user_id');
+      showToast('onExit: $reason, $user_id');
+    },
+        // [Optional callback] onConnectionFailure : User can now add a new callback connectionFailure for tracking the reason of accounts not getting connected.
+        onConnectionFailure: (reason, user_id, work_platform_id) {
+      log('onConnectionFailure: $reason, $user_id , $work_platform_id');
+      showToast('onConnectionFailure: $reason, $user_id , $work_platform_id');
     });
+  }
+
+  void showToast(String msg) {
+    Fluttertoast.showToast(
+        msg: msg,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Color.fromARGB(255, 36, 36, 36),
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 
   Future<String?> getPhylloEnvironmentUrl(PhylloEnvironment environment) async {

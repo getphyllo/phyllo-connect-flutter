@@ -1,4 +1,3 @@
-## 0.1.27
+## 0.1.28
 
-- Released the updated Instagram help guides
-- Updates error recovery screens : More precise and updated list of error messages will appear on SDK in case an account doesn’t gets connected.
+- Connection failure callback support : User can now add a new callback connectionFailure for tracking the reason of accounts not getting connected.

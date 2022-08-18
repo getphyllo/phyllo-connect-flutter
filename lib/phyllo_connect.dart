@@ -73,6 +73,9 @@ class PhylloConnect {
     ///
     required Function(String, String)? onExit,
 
+    //[Optional] onConnectionFailure : User can now add a new callback connectionFailure for tracking the reason of accounts not getting connected
+
+    Function(String, String, String)? onConnectionFailure,
   }) {
     _eventChannel.receiveBroadcastStream().listen((event) {
       switch (event['callback']) {
@@ -95,6 +98,10 @@ class PhylloConnect {
           break;
         case 'onExit':
           onExit?.call(event['reason'] ?? '', event['user_id'] ?? '');
+          break;
+        case 'onConnectionFailure':
+          onConnectionFailure?.call(event['reason'] ?? '',
+              event['user_id'] ?? '', event['work_platform_id'] ?? '');
           break;
         default:
       }

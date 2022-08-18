@@ -142,6 +142,12 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
                     Log.d(logTag, "onExit $reason $user_id")
                     onPhylloExit(reason, user_id)
                 }
+
+                override fun onConnectionFailure(reason: String?,user_id: String?,work_platform_id: String?) {
+                    Log.d(logTag, "onConnectionFailure $reason $user_id $work_platform_id")
+                    onPhylloConnectionFailure(reason, user_id, work_platform_id)
+                }
+                 
             })
 
     }
@@ -189,6 +195,15 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
         result["callback"] = "onExit"
         result["reason"] = reason
         result["user_id"] = user_id
+        onEventSink?.success(result)
+    }
+
+    private fun onPhylloConnectionFailure(reason: String?,user_id: String?,work_platform_id: String?) {
+        val result: MutableMap<String, Any?> = HashMap()
+        result["callback"] = "onConnectionFailure"
+        result["reason"] = reason
+        result["user_id"] = user_id
+        result["work_platform_id"] = work_platform_id
         onEventSink?.success(result)
     }
 }
