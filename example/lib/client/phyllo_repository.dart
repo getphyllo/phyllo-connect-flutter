@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:phyllo_connect_example/client/http.dart';
 import 'package:phyllo_connect_example/client/result.dart';
-import 'package:phyllo_connect_example/constants/environment.dart';
 import 'package:phyllo_connect_example/constants/generate_radom_string.dart';
 
 class PhylloRepository {
@@ -12,13 +11,11 @@ class PhylloRepository {
 
   final Http _http = Http();
 
-  Future<String?> getUserId(String env,
-      {required Environment environment}) async {
+  Future<String?> getUserId(String env) async {
     Result result = await _http.request(
       requestType: RequestType.post,
       url: '$env/v1/users',
       body: {'name': getRadomString(8), 'external_id': getRadomString(20)},
-      environment: environment,
     );
     if (result is Success) {
       return result.value['id'];
@@ -28,8 +25,7 @@ class PhylloRepository {
     }
   }
 
-  Future<String?> getSdkToken(String env,
-      {required String userId, required Environment environment}) async {
+  Future<String?> getSdkToken(String env, {required String userId}) async {
     Result result = await _http.request(
       requestType: RequestType.post,
       url: '$env/v1/sdk-tokens',
@@ -37,7 +33,6 @@ class PhylloRepository {
         'user_id': userId,
         'products': ['IDENTITY', 'ENGAGEMENT', 'INCOME'],
       },
-      environment: environment,
     );
     if (result is Success) {
       return result.value['sdk_token'];
