@@ -82,8 +82,8 @@ class PhylloProvider extends DefaultChangeNotifier {
       log('onExit: $reason, $user_id');
     },
         // [Optional callback] onConnectionFailure : User can now add a new callback connectionFailure for tracking the reason of accounts not getting connected.
-        onConnectionFailure: (reason, user_id, work_platform_id) {
-      log('onConnectionFailure: $reason, $user_id , $work_platform_id');
+        onConnectionFailure: (reason, work_platform_id, user_id) {
+      log('onConnectionFailure: $reason, $work_platform_id, $user_id');
     });
   }
 

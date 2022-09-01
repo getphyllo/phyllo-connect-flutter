@@ -101,7 +101,10 @@ class PhylloConnect {
           break;
         case 'onConnectionFailure':
           onConnectionFailure?.call(
-              event['reason'], event['user_id'], event['work_platform_id']);
+            event['reason'],
+            event['work_platform_id'],
+            event['user_id'],
+          );
           break;
         default:
       }

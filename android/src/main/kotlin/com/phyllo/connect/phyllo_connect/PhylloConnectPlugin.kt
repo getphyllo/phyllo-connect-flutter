@@ -119,7 +119,6 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
                     work_platform_id: String?,
                     user_id: String?,
                 ) {
-                    Log.d(logTag, "onAccountConnected $account_id $work_platform_id $user_id")
                     onPhylloAccountConnected(account_id, work_platform_id, user_id)
                 }
 
@@ -128,27 +127,23 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
                     work_platform_id: String?,
                     user_id: String?,
                 ) {
-                    Log.d(logTag, "onAccountDisconnected $account_id $work_platform_id $user_id")
                     onPhylloAccountDisconnected(account_id, work_platform_id, user_id)
                 }
 
                 override fun onTokenExpired(user_id: String?) {
-                    Log.d(logTag, "onTokenExpired $user_id")
                     onPhylloTokenExpired(user_id)
                 }
 
                 override fun onExit(reason: String?, user_id: String?) {
-                    Log.d(logTag, "onExit $reason $user_id")
                     onPhylloExit(reason, user_id)
                 }
 
                 override fun onConnectionFailure(
                     reason: String?,
-                    user_id: String?,
                     work_platform_id: String?,
+                    user_id: String?
                 ) {
-                    Log.d(logTag, "onConnectionFailure $reason $user_id $work_platform_id")
-                    onPhylloConnectionFailure(reason, user_id, work_platform_id)
+                    onPhylloConnectionFailure(reason, work_platform_id, user_id)
                 }
 
             })
@@ -209,8 +204,9 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
         val result: MutableMap<String, Any?> = HashMap()
         result["callback"] = "onConnectionFailure"
         result["reason"] = reason
-        result["user_id"] = user_id
         result["work_platform_id"] = work_platform_id
+        result["user_id"] = user_id
+        
         eventSink?.success(result)
     }
 }
