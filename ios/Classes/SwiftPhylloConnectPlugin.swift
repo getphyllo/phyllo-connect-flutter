@@ -132,8 +132,8 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
         var result = [String : Any]()
         result["callback"] = "onConnectionFailure"
         result["reason"] = reason
-        result["user_id"] = user_id
         result["work_platform_id"] = work_platform_id
+        result["user_id"] = user_id
         
         guard let sink = onEventSink else { return }
         sink(result)

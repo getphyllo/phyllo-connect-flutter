@@ -151,7 +151,6 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
     }
 
     private fun open() {
-        Log.d(logTag, "Open Phyllo Connect Sdk")
         PhylloConnect.open()
     }
 
