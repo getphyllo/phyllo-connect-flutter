@@ -15,7 +15,7 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
         let instance = SwiftPhylloConnectPlugin()
         
         let eventChannel = FlutterEventChannel(
-            name: "phyllo_connects/connect_callback",
+            name: "phyllo_connect/connect_callback",
             binaryMessenger: registrar.messenger())
         eventChannel.setStreamHandler(instance)
         
@@ -71,15 +71,15 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
     
     func initialize(config : Dictionary<String, Any>){
         
-       
+        
         let phylloConfig = PhylloConfig (
-                                            environment: getPhylloEnvironment(env: config["environment"] as? String),
-                                            clientDisplayName: (config["clientDisplayName"] as? String)!,
-                                            token: (config["token"] as? String)!,
-                                            userId: (config["userId"] as? String)!,
-                                            delegate:self,
-                                            workPlatformId: (config["workPlatformId"] as? String)!
-                                        )
+            environment: getPhylloEnvironment(env: config["environment"] as? String),
+            clientDisplayName: (config["clientDisplayName"] as? String)!,
+            token: (config["token"] as? String)!,
+            userId: (config["userId"] as? String)!,
+            delegate:self,
+            workPlatformId: (config["workPlatformId"] as? String)!
+        )
         PhylloConnect.shared.initialize(config: phylloConfig)
     }
     
@@ -87,7 +87,7 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
         PhylloConnect.shared.open()
     }
     
-    public func onAccountConnected(account_id: String, work_platform_id: String, user_id: String) {        
+    public func onAccountConnected(account_id: String, work_platform_id: String, user_id: String) {
         var result = [String : Any]()
         result["callback"] = "onAccountConnected"
         result["account_id"] = account_id
@@ -109,7 +109,7 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
         sink(result)
     }
     
-    public func onTokenExpired(user_id: String) {        
+    public func onTokenExpired(user_id: String) {
         var result = [String : Any]()
         result["callback"] = "onTokenExpired"
         result["user_id"] = user_id
@@ -118,7 +118,7 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
         sink(result)
     }
     
-    public func onExit(reason: String, user_id: String) {        
+    public func onExit(reason: String, user_id: String) {
         var result = [String : Any]()
         result["callback"] = "onExit"
         result["reason"] = reason
@@ -127,4 +127,16 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
         guard let sink = onEventSink else { return }
         sink(result)
     }
+    
+    public func onConnectionFailure(reason: String, work_platform_id: String, user_id: String) {
+        var result = [String : Any]()
+        result["callback"] = "onConnectionFailure"
+        result["reason"] = reason
+        result["work_platform_id"] = work_platform_id
+        result["user_id"] = user_id
+        
+        guard let sink = onEventSink else { return }
+        sink(result)
+    }
+    
 }

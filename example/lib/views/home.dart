@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phyllo_connect_example/phyllo_provider.dart';
-import 'package:phyllo_connect_example/views/app_button.dart';
+import 'package:phyllo_connect_example/views/primary_button.dart';
 import 'package:phyllo_connect_example/views/loader.dart';
 import 'package:provider/provider.dart';
 
@@ -33,21 +33,21 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      AppButton(
+                      PrimaryButton(
                         label: 'Connect Platform Account(S)',
                         onPressed: () {
                           phylloProvider.launchSdk('');
                         },
                       ),
                       const SizedBox(height: 20),
-                      AppButton(
+                      PrimaryButton(
                         label: 'Connect Instagram using Phyllo',
                         onPressed: () {
                           phylloProvider.launchSdk(instagramId);
                         },
                       ),
                       const SizedBox(height: 20),
-                      AppButton(
+                      PrimaryButton(
                         label: 'Connect YouTube using Phyllo',
                         onPressed: () {
                           phylloProvider.launchSdk(youtubeId);

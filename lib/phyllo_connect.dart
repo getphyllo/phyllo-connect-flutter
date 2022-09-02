@@ -27,7 +27,7 @@ class PhylloConnect {
   final MethodChannel _channel = const MethodChannel('phyllo_connect');
 
   final EventChannel _eventChannel =
-      const EventChannel('phyllo_connects/connect_callback');
+      const EventChannel('phyllo_connect/connect_callback');
 
   /// To get started, you will require the API keys and secrets to access the Phyllo environment.
   /// In order to obtain the credentials, you can reach out to `contact@getphyllo.com`
@@ -59,42 +59,52 @@ class PhylloConnect {
   void onConnectCallback({
     /// onAccountConnected is called when the user has successfully connected to the platform.
     ///
-    required Function(String, String, String)? onAccountConnected,
+    required void Function(String?, String?, String?)? onAccountConnected,
 
     /// onAccountDisconnected is called when the user has disconnected from the platform.
     ///
-    required Function(String, String, String)? onAccountDisconnected,
+    required void Function(String?, String?, String?)? onAccountDisconnected,
 
     /// onTokenExpired is called when the token has expired.
     ///
-    required Function(String)? onTokenExpired,
+    required void Function(String?)? onTokenExpired,
 
     /// onExit is called when the user has exited the Phyllo Connect flow.
     ///
-    required Function(String, String)? onExit,
+    required void Function(String?, String?)? onExit,
 
+    //[Optional] onConnectionFailure : User can now add a new callback connectionFailure for tracking the reason of accounts not getting connected
+
+    Function(String?, String?, String?)? onConnectionFailure,
   }) {
     _eventChannel.receiveBroadcastStream().listen((event) {
       switch (event['callback']) {
         case 'onAccountConnected':
           onAccountConnected?.call(
-            event['account_id'] ?? '',
-            event['work_platform_id'] ?? '',
-            event['user_id'] ?? '',
+            event['account_id'],
+            event['work_platform_id'],
+            event['user_id'],
           );
           break;
         case 'onAccountDisconnected':
           onAccountDisconnected?.call(
-            event['account_id'] ?? '',
-            event['work_platform_id'] ?? '',
-            event['user_id'] ?? '',
+            event['account_id'],
+            event['work_platform_id'],
+            event['user_id'],
           );
           break;
         case 'onTokenExpired':
-          onTokenExpired?.call(event['user_id'] ?? '');
+          onTokenExpired?.call(event['user_id']);
           break;
         case 'onExit':
-          onExit?.call(event['reason'] ?? '', event['user_id'] ?? '');
+          onExit?.call(event['reason'], event['user_id']);
+          break;
+        case 'onConnectionFailure':
+          onConnectionFailure?.call(
+            event['reason'],
+            event['work_platform_id'],
+            event['user_id'],
+          );
           break;
         default:
       }
