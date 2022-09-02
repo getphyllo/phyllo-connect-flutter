@@ -2,7 +2,7 @@
 
 [![pub package](https://img.shields.io/pub/v/phyllo_connect.svg)](https://pub.dev/packages/phyllo_connect)
 
-Phyllo Connect is a quick and secure way to connect work platforms via Phyllo in your app. 
+Phyllo Connect is a quick and secure way to connect work platforms via Phyllo in your app.
 Supports:
 iOS, Android.
 
@@ -11,9 +11,10 @@ iOS, Android.
 To use this plugin, add `phyllo_connect` as a [dependency in your pubspec.yaml file](https://flutter.dev/platform-plugins/).
 
 ### Example
-Replace your 
 
-``` dart
+Replace your
+
+```dart
 import 'package:phyllo_connect/phyllo_connect.dart';
 
 class Configs {
@@ -26,9 +27,10 @@ class Configs {
   static const PhylloEnvironment env = PhylloEnvironment.sanbox; //set phyllo environment
 }
 ```
+
 -> Lib -> phyllo_provider.dart
 
-``` dart
+```dart
 
 import 'package:flutter/material.dart';
 import 'package:phyllo_connect/phyllo_connect.dart';
@@ -36,7 +38,7 @@ import 'package:phyllo_connect_example/client/phyllo_repository.dart';
 import 'package:phyllo_connect_example/constants/configs.dart';
 
 final PhylloConnect _phylloConnect = PhylloConnect.instance;
-//Too Lunch the sdk here it will method 
+//Too Lunch the sdk here it will method
 void _launchSdk(String workPlatformId) {
     PhylloConfig config = PhylloConfig(
       clientDisplayName: clientDisplayName,
@@ -59,7 +61,11 @@ void _launchSdk(String workPlatformId) {
       log('onTokenExpired: $user_id');
     }, onExit: (reason, user_id) {
       log('onExit: $reason, $user_id');
-    });
+    },
+     // [Optional callback] onConnectionFailure : User can now add a new callback connectionFailure for tracking the reason of accounts not getting connected.
+        onConnectionFailure: (reason, work_platform_id, user_id) {
+      log('onConnectionFailure: $reason, $work_platform_id, $user_id');
+    );
 
   }
 
