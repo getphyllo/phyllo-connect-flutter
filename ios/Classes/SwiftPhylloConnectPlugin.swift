@@ -139,4 +139,9 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
         sink(result)
     }
     
+    public func version() -> [String:String] {
+        PhylloConnect.shared.version { (value) in
+            print("Version Details => \(value)")
+        }
+    }
 }
