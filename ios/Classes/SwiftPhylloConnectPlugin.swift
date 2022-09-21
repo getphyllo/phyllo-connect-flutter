@@ -71,15 +71,16 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
     
     func initialize(config : Dictionary<String, Any>){
         
-        
-        let phylloConfig = PhylloConfig (
-            environment: getPhylloEnvironment(env: config["environment"] as? String),
-            clientDisplayName: (config["clientDisplayName"] as? String)!,
-            token: (config["token"] as? String)!,
-            userId: (config["userId"] as? String)!,
-            delegate:self,
-            workPlatformId: (config["workPlatformId"] as? String)!
-        )
+        var phylloConfig = [String:Any]()
+        phylloConfig["environment"] = getPhylloEnvironment(env: config["environment"] as? String)
+        phylloConfig["clientDisplayName"] = (config["clientDisplayName"] as? String)!
+        phylloConfig["token"] = (config["token"] as? String)!
+        phylloConfig["userId"] = (config["userId"] as? String)!
+        phylloConfig["delegate"] = self
+        phylloConfig["workPlatformId"] = (config["workPlatformId"] as? String)!
+        phylloConfig["external_sdk_name"] = "flutter" //for Tracking
+        phylloConfig["external_sdk_version"] = "0.3.0"  // for version
+
         PhylloConnect.shared.initialize(config: phylloConfig)
     }
     
@@ -137,11 +138,5 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
         
         guard let sink = onEventSink else { return }
         sink(result)
-    }
-    
-    public func version() -> [String:String] {
-        PhylloConnect.shared.version { (value) in
-            print("Version Details => \(value)")
-        }
     }
 }

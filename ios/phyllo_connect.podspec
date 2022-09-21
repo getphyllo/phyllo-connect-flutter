@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'phyllo_connect'
-  s.version          = '0.2.0'
+  s.version          = '0.3.0'
   s.summary          = 'Phyllo Connect is a quick and secure way to connect work platforms via Phyllo in your iOS app.'
   s.description      = 'Phyllo Connect is a quick and secure way to connect work platforms via Phyllo in your iOS app. Connect SDK manages work platform authentication (credential validation, multi-factor authentication, error handling, etc).'
   s.homepage         = 'https://github.com/getphyllo/phyllo-connect-ios'
