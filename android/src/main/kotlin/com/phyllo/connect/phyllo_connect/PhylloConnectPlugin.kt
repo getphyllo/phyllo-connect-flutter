@@ -114,7 +114,7 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
                                             "singleAccount" to false,
                                     )
         PhylloConnect.initialize(context = context,
-        map,
+            map,
             callback = object : ConnectCallback() {
 
                 override fun onAccountConnected(
