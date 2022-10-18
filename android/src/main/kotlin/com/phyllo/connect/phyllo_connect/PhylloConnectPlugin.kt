@@ -105,13 +105,16 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
     ) {
 
         Log.d(logTag, "Initialize Phyllo Connect Sdk")
-
+        var map = hashMapOf<String,Any>(
+                                            "clientDisplayName" to clientDisplayName,
+                                            "token" to token,
+                                            "workPlatformId" to workPlatformId,
+                                            "userId" to userId,
+                                            "environment" to environment,
+                                            "singleAccount" to false,
+                                    )
         PhylloConnect.initialize(context = context,
-            clientDisplayName = clientDisplayName,
-            userId = userId,
-            token = token,
-            workPlatformId = workPlatformId,
-            environment = getPhylloEnvironment(environment),
+        map,
             callback = object : ConnectCallback() {
 
                 override fun onAccountConnected(
