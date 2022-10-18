@@ -11,7 +11,7 @@ class VersionConstants {
 
   static const String androidSdkVersion = '0.2.0';
 
-  static const String minSupportedAndroidVersion = '8.0';
+  static const String minSupportedAndroidVersion = '21';
 
-  static const String maxSupportedAndroidVersion = '12.0*';
+  static const String maxSupportedAndroidVersion = '31';
 }
