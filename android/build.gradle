@@ -26,8 +26,9 @@ buildscript {
 rootProject.allprojects {
     repositories {
         google()
+        mavenCentral()
         maven {
-            url 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+           url  "https://s01.oss.sonatype.org/content/repositories/snapshots/"
         }
     }
 }
@@ -37,7 +38,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 29
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

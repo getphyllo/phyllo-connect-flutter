@@ -55,8 +55,9 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
                 val token = call.argument<String>("token") ?: ""
                 val environment = call.argument<String>("environment") ?: ""
                 val workPlatformId = call.argument<String>("workPlatformId") ?: ""
+                val singleAccount = call.argument<Boolean>("singleAccount") ?: false
 
-                initialize(clientDisplayName, userId, token, environment, workPlatformId)
+                initialize(clientDisplayName, userId, token, environment, workPlatformId,singleAccount)
             }
             "open" -> {
                 open()
@@ -95,13 +96,13 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
         }
     }
 
-
     private fun initialize(
         clientDisplayName: String,
         userId: String,
         token: String,
         environment: String,
         workPlatformId: String,
+        singleAccount: Boolean,
     ) {
 
         Log.d(logTag, "Initialize Phyllo Connect Sdk")
@@ -110,8 +111,8 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
                                             "token" to token,
                                             "workPlatformId" to workPlatformId,
                                             "userId" to userId,
-                                            "environment" to environment,
-                                            "singleAccount" to false,
+                                            "environment" to getPhylloEnvironment(environment),
+                                            "singleAccount" to singleAccount,
                                     )
         PhylloConnect.initialize(context = context,
             map,

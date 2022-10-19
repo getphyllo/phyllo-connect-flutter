@@ -73,12 +73,12 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
         
         var phylloConfig = [String:Any]()
         phylloConfig["environment"] = getPhylloEnvironment(env: config["environment"] as? String)
-        //phylloConfig["clientDisplayName"] = (config["clientDisplayName"] as? String)!
+        phylloConfig["clientDisplayName"] = (config["clientDisplayName"] as? String)!
         phylloConfig["token"] = (config["token"] as? String)!
         phylloConfig["userId"] = (config["userId"] as? String)!
         phylloConfig["delegate"] = self
-        phylloConfig["workPlatformId"] = (config["workPlatformId"] as? String)!
-        phylloConfig["singleAccount"] = true
+        phylloConfig["workPlatformId"] = config["workPlatformId"] as? String ?? ""
+        phylloConfig["singleAccount"] = config["singleAccount"] as? Bool ?? false
 
         PhylloConnect.shared.initialize(config: phylloConfig)
     }
