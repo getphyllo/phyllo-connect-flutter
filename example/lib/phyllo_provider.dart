@@ -60,17 +60,18 @@ class PhylloProvider extends DefaultChangeNotifier {
     }
   }
 
-  void _launchSdk(String workPlatformId) {
+  void _launchSdk(String workPlatformId)  {
+
     Map<String, dynamic> config = {
       "clientDisplayName": clientDisplayName,
       "environment": Configs.environment.name,
       "userId": _userId!,
       "token": _token!,
-      "workPlatformId": workPlatformId
+      "workPlatformId": workPlatformId,
     };
 
-    _phylloConnect.initialize(config);
-    _phylloConnect.open();
+     _phylloConnect.initialize(config);
+     _phylloConnect.open();
 
     _phylloConnect.onConnectCallback(
         onAccountConnected: (account_id, work_platform_id, user_id) {
