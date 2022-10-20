@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/services.dart';
 import 'package:phyllo_connect/src/verison_constants.dart';
 import 'src/enum.dart';
@@ -43,18 +42,6 @@ class PhylloConnect {
   /// The token can be configured to customize Connect flow. To see how to create a new SDK token, see the API Reference entry for sdk-tokens.
   ///
   Future<void> initialize(Map<String, dynamic> config) async {
-    // Map<dynamic, dynamic> result = config;
-    // if (result.containsKey('userId') &&
-    //     result['userId'] == null &&
-    //     result['userId'].isEmpty) {
-            
-    //       return; 
-    //   }
-    //   Map<String, dynamic> data = Map<String, dynamic>();
-    // for (dynamic type in result.keys) {
-    //   data[type.toString()] = result[type];
-    // }
-
     return await _channel.invokeMethod('initialize', config);
   }
 

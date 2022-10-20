@@ -2,16 +2,16 @@ package com.phyllo.connect.phyllo_connect
 
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.NonNull
 import com.getphyllo.ConnectCallback
 import com.getphyllo.PhylloConnect
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-import io.flutter.plugin.common.EventChannel
 
 
 class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.StreamHandler {
@@ -48,16 +48,41 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
             }
             "initialize" -> {
 
-                Log.d(logTag, call.arguments.toString())
+                val clientDisplayName = call.argument<String?>("clientDisplayName")
+                val userId = call.argument<String?>("userId")
+                val token = call.argument<String?>("token")
+                val environment = call.argument<String?>("environment")
+                val workPlatformId = call.argument<String?>("workPlatformId") ?: ""
+                val singleAccount = call.argument<Boolean?>("singleAccount") ?: false
 
-                val clientDisplayName = call.argument<String>("clientDisplayName") ?: ""
-                val userId = call.argument<String>("userId") ?: ""
-                val token = call.argument<String>("token") ?: ""
-                val environment = call.argument<String>("environment") ?: ""
-                val workPlatformId = call.argument<String>("workPlatformId") ?: ""
-                val singleAccount = call.argument<Boolean>("singleAccount") ?: false
+                if (clientDisplayName == null) {
+                    showToast("Please pass a valid clientDisplayName.")
+                    result.success(false)
+                }
 
-                initialize(clientDisplayName, userId, token, environment, workPlatformId,singleAccount)
+                if (userId == null) {
+                    showToast("Please pass a valid userId.")
+                    result.success(false)
+                }
+
+                if (token == null) {
+                    showToast("Please pass a valid token.")
+                    result.success(false)
+                }
+
+                if (environment == null) {
+                    showToast("Please pass a valid environment.")
+                    result.success(false)
+                }
+                initialize(
+                    clientDisplayName!!,
+                    userId!!,
+                    token!!,
+                    environment!!,
+                    workPlatformId,
+                    singleAccount,
+                )
+                result.success(true)
             }
             "open" -> {
                 open()
@@ -66,6 +91,10 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
                 result.notImplemented()
             }
         }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
@@ -104,16 +133,14 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
         workPlatformId: String,
         singleAccount: Boolean,
     ) {
-
-        Log.d(logTag, "Initialize Phyllo Connect Sdk")
-        var map = hashMapOf<String,Any>(
-                                            "clientDisplayName" to clientDisplayName,
-                                            "token" to token,
-                                            "workPlatformId" to workPlatformId,
-                                            "userId" to userId,
-                                            "environment" to getPhylloEnvironment(environment),
-                                            "singleAccount" to singleAccount,
-                                    )
+        val map = hashMapOf<String, Any>(
+            "clientDisplayName" to clientDisplayName,
+            "token" to token,
+            "workPlatformId" to workPlatformId,
+            "userId" to userId,
+            "environment" to getPhylloEnvironment(environment),
+            "singleAccount" to singleAccount,
+        )
         PhylloConnect.initialize(context = context,
             map,
             callback = object : ConnectCallback() {
@@ -145,7 +172,7 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
                 override fun onConnectionFailure(
                     reason: String?,
                     work_platform_id: String?,
-                    user_id: String?
+                    user_id: String?,
                 ) {
                     onPhylloConnectionFailure(reason, work_platform_id, user_id)
                 }
@@ -209,7 +236,7 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
         result["reason"] = reason
         result["work_platform_id"] = work_platform_id
         result["user_id"] = user_id
-        
+
         eventSink?.success(result)
     }
 }
