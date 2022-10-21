@@ -54,7 +54,7 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
                 val environment = call.argument<String?>("environment")
                 val workPlatformId = call.argument<String?>("workPlatformId") ?: ""
                 val singleAccount = call.argument<Boolean?>("singleAccount") ?: false
-
+                
                 if (clientDisplayName == null) {
                     showToast("Please pass a valid clientDisplayName.")
                     result.success(false)
@@ -74,13 +74,20 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
                     showToast("Please pass a valid environment.")
                     result.success(false)
                 }
+
+                if (environment == null) {
+                    showToast("Please pass a valid environment.")
+                    result.success(false)
+                } 
+
+
                 initialize(
                     clientDisplayName!!,
                     userId!!,
                     token!!,
                     environment!!,
                     workPlatformId,
-                    singleAccount,
+                    singleAccount
                 )
                 result.success(true)
             }
@@ -131,53 +138,55 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
         token: String,
         environment: String,
         workPlatformId: String,
-        singleAccount: Boolean,
+        singleAccount: Boolean
     ) {
-        val map = hashMapOf<String, Any>(
+
+        var callback = object : ConnectCallback() {
+
+            override fun onAccountConnected(
+                account_id: String?,
+                work_platform_id: String?,
+                user_id: String?,
+            ) {
+                onPhylloAccountConnected(account_id, work_platform_id, user_id)
+            }
+
+            override fun onAccountDisconnected(
+                account_id: String?,
+                work_platform_id: String?,
+                user_id: String?,
+            ) {
+                onPhylloAccountDisconnected(account_id, work_platform_id, user_id)
+            }
+
+            override fun onTokenExpired(user_id: String?) {
+                onPhylloTokenExpired(user_id)
+            }
+
+            override fun onExit(reason: String?, user_id: String?) {
+                onPhylloExit(reason, user_id)
+            }
+
+            override fun onConnectionFailure(
+                reason: String?,
+                work_platform_id: String?,
+                user_id: String?,
+            ) {
+                onPhylloConnectionFailure(reason, work_platform_id, user_id)
+            }
+
+        }
+
+        val map = hashMapOf<String, Any?>(
             "clientDisplayName" to clientDisplayName,
             "token" to token,
             "workPlatformId" to workPlatformId,
             "userId" to userId,
             "environment" to getPhylloEnvironment(environment),
-            "singleAccount" to singleAccount,
+            "callback" to callback,
+            "singleAccount" to singleAccount
         )
-        PhylloConnect.initialize(context = context,
-            map,
-            callback = object : ConnectCallback() {
-
-                override fun onAccountConnected(
-                    account_id: String?,
-                    work_platform_id: String?,
-                    user_id: String?,
-                ) {
-                    onPhylloAccountConnected(account_id, work_platform_id, user_id)
-                }
-
-                override fun onAccountDisconnected(
-                    account_id: String?,
-                    work_platform_id: String?,
-                    user_id: String?,
-                ) {
-                    onPhylloAccountDisconnected(account_id, work_platform_id, user_id)
-                }
-
-                override fun onTokenExpired(user_id: String?) {
-                    onPhylloTokenExpired(user_id)
-                }
-
-                override fun onExit(reason: String?, user_id: String?) {
-                    onPhylloExit(reason, user_id)
-                }
-
-                override fun onConnectionFailure(
-                    reason: String?,
-                    work_platform_id: String?,
-                    user_id: String?,
-                ) {
-                    onPhylloConnectionFailure(reason, work_platform_id, user_id)
-                }
-
-            })
+        PhylloConnect.initialize(context = context,map)
 
     }
 
