@@ -75,12 +75,6 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
                     result.success(false)
                 }
 
-                if (environment == null) {
-                    showToast("Please pass a valid environment.")
-                    result.success(false)
-                } 
-
-
                 initialize(
                     clientDisplayName!!,
                     userId!!,
