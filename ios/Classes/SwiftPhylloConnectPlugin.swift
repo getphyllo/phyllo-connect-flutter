@@ -103,8 +103,9 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
         phylloConfig["token"] = config["token"] as? String
         phylloConfig["userId"] = config["userId"] as? String
         phylloConfig["workPlatformId"] = config["workPlatformId"] as? String
-        phylloConfig["singleAccount"] = config["singleAccount"] as? Bool ?? false
         phylloConfig["delegate"] = self
+        phylloConfig["external_sdk_name"] = "flutter" //for Tracking
+        phylloConfig["external_sdk_version"] = "0.3.0"  // for version
         
         PhylloConnect.shared.initialize(config: phylloConfig)
     }
