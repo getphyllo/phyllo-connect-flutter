@@ -48,41 +48,27 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
             }
             "initialize" -> {
 
-                val clientDisplayName = call.argument<String?>("clientDisplayName")
-                val userId = call.argument<String?>("userId")
-                val token = call.argument<String?>("token")
-                val environment = call.argument<String?>("environment")
-                val workPlatformId = call.argument<String?>("workPlatformId") ?: ""
-                val singleAccount = call.argument<Boolean?>("singleAccount") ?: false
-                
-                if (clientDisplayName == null) {
+                if (call.argument<String?>("clientDisplayName") == null) {
                     showToast("Please pass a valid clientDisplayName.")
                     result.success(false)
                 }
 
-                if (userId == null) {
+                if (call.argument<String?>("userId") == null) {
                     showToast("Please pass a valid userId.")
                     result.success(false)
                 }
 
-                if (token == null) {
+                if (call.argument<String?>("token") == null) {
                     showToast("Please pass a valid token.")
                     result.success(false)
                 }
 
-                if (environment == null) {
+                if (call.argument<String?>("environment") == null) {
                     showToast("Please pass a valid environment.")
                     result.success(false)
                 }
 
-                initialize(
-                    clientDisplayName!!,
-                    userId!!,
-                    token!!,
-                    environment!!,
-                    workPlatformId,
-                    singleAccount
-                )
+                initialize(call.arguments as HashMap<String, Any?>)
                 result.success(true)
             }
             "open" -> {
@@ -126,13 +112,8 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
         }
     }
 
-    private fun initialize(
-        clientDisplayName: String,
-        userId: String,
-        token: String,
-        environment: String,
-        workPlatformId: String,
-        singleAccount: Boolean
+    private fun initialize(config:
+    HashMap<String, Any?>
     ) {
 
         var callback = object : ConnectCallback() {
@@ -171,15 +152,10 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
 
         }
 
-        val map = hashMapOf<String, Any?>(
-            "clientDisplayName" to clientDisplayName,
-            "token" to token,
-            "workPlatformId" to workPlatformId,
-            "userId" to userId,
-            "environment" to getPhylloEnvironment(environment),
-            "callback" to callback,
-            "singleAccount" to singleAccount
-        )
+        val map = hashMapOf<String, Any?>()
+        map.putAll(config)
+        map.put("environment", getPhylloEnvironment(config.get("environment") as String))
+        map.put("callback", callback)    
         PhylloConnect.initialize(context = context,map)
 
     }

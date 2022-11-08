@@ -14,24 +14,24 @@ buildscript {
     }
 }
 
-rootProject.allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-//For Release version
-
-
 // rootProject.allprojects {
 //     repositories {
 //         google()
 //         mavenCentral()
-//         maven {
-//            url  "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-//         }
 //     }
 // }
+//For Release version
+
+
+rootProject.allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+           url  "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+}
 //For Snapshot
 
 apply plugin: 'com.android.library'
@@ -61,5 +61,6 @@ android {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     //implementation "com.getphyllo:phyllo-connect:0.2.0"
-    implementation "com.getphyllo:phyllo-connect:0.3.0"    
+    //implementation "com.getphyllo:phyllo-connect:0.3.0" 
+    implementation "com.getphyllo:phyllo-connect:0.2.3-SNAPSHOT"   
 }
