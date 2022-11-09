@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/services.dart';
-import 'package:phyllo_connect/src/verison_constants.dart';
 import 'src/enum.dart';
 
 export 'src/enum.dart';
@@ -67,20 +66,6 @@ class PhylloConnect {
   ///
   Future<void> open() async {
     await _channel.invokeMethod('open');
-  }
-
-  Map<String, String> version() {
-    return <String, String>{
-      'connect_flutter_sdk_version': VersionConstants.flutterSdkVersion,
-      'connect_android_sdk_version': VersionConstants.androidSdkVersion,
-      'min_supported_android_version':
-          VersionConstants.minSupportedAndroidVersion,
-      'max_supported_android_version':
-          VersionConstants.maxSupportedAndroidVersion,
-      'connect_ios_sdk_version': VersionConstants.iosSdkVersion,
-      'min_supported_ios_version': VersionConstants.minSupportedIosVersion,
-      'max_supported_ios_version': VersionConstants.maxSupportedIosVersion,
-    };
   }
 
   void onConnectCallback({
