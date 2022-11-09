@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:phyllo_connect/phyllo_connect.dart';
 import 'package:phyllo_connect_example/client/phyllo_repository.dart';
@@ -61,32 +62,36 @@ class PhylloProvider extends DefaultChangeNotifier {
   }
 
   void _launchSdk(String workPlatformId) {
-    PhylloConfig config = PhylloConfig(
-      clientDisplayName: clientDisplayName,
-      environment: Configs.environment,
-      userId: _userId!,
-      token: _token!,
-      workPlatformId: workPlatformId,
-    );
+    Map<String, dynamic> config = {
+      'clientDisplayName': clientDisplayName,
+      'environment': Configs.environment.name,
+      'userId': _userId!,
+      'token': _token!,
+      'workPlatformId': workPlatformId
+    };
+
     _phylloConnect.initialize(config);
     _phylloConnect.open();
 
     _phylloConnect.onConnectCallback(
-        onAccountConnected: (account_id, work_platform_id, user_id) {
-      log('onAccountConnected: $account_id, $work_platform_id, $user_id');
-    }, onAccountDisconnected: (account_id, work_platform_id, user_id) {
-      log('onAccountDisconnected: $account_id, $work_platform_id, $user_id');
-    }, onTokenExpired: (user_id) {
-      log('onTokenExpired: $user_id');
-    }, onExit: (reason, user_id) {
-      log('onExit: $reason, $user_id');
-    },
-        // [Optional callback] onConnectionFailure : User can now add a new callback connectionFailure for tracking the reason of accounts not getting connected.
-        onConnectionFailure: (reason, work_platform_id, user_id) {
-      log('onConnectionFailure: $reason, $work_platform_id, $user_id');
-    });
+      onAccountConnected: (account_id, work_platform_id, user_id) {
+        log('onAccountConnected: $account_id, $work_platform_id, $user_id');
+      },
+      onAccountDisconnected: (account_id, work_platform_id, user_id) {
+        log('onAccountDisconnected: $account_id, $work_platform_id, $user_id');
+      },
+      onTokenExpired: (user_id) {
+        log('onTokenExpired: $user_id');
+      },
+      onExit: (reason, user_id) {
+        log('onExit: $reason, $user_id');
+      },
+      // [Optional callback] onConnectionFailure : User can now add a new callback connectionFailure for tracking the reason of accounts not getting connected.
+      onConnectionFailure: (reason, work_platform_id, user_id) {
+        log('onConnectionFailure: $reason, $work_platform_id, $user_id');
+      },
+    );
 
-    log('version: ${_phylloConnect.version()}');
   }
 
   Future<String?> getPhylloEnvironmentUrl(PhylloEnvironment environment) async {

@@ -56,12 +56,11 @@ class DialogButton extends StatelessWidget {
     return TextButton(
       child: Text(label),
       style: TextButton.styleFrom(
-        minimumSize: const Size(100, 34),
+        foregroundColor: color, minimumSize: const Size(100, 34),
         textStyle: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
         ),
-        primary: color,
         backgroundColor: backgroundColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5),
