@@ -1,36 +1,25 @@
 package com.phyllo.connect.phyllo_connect
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.annotation.NonNull
 import com.getphyllo.ConnectCallback
 import com.getphyllo.PhylloConnect
 import io.flutter.embedding.engine.plugins.FlutterPlugin
-import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 
 
-class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.StreamHandler {
+class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
 
     private lateinit var channel: MethodChannel
-    private lateinit var eventChannel: EventChannel
     private lateinit var context: Context
-
-    private var eventSink: EventChannel.EventSink? = null
-
-    val logTag: String = "PhylloConnect"
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "phyllo_connect")
         channel.setMethodCallHandler(this)
-
-        eventChannel =
-            EventChannel(flutterPluginBinding.binaryMessenger, "phyllo_connect/connect_callback")
-        eventChannel.setStreamHandler(this)
 
         this.context = flutterPluginBinding.applicationContext
     }
@@ -67,8 +56,8 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
                     showToast("Please pass a valid environment.")
                     result.success(false)
                 }
-
-                initialize(call.arguments as HashMap<String, Any?>)
+                @Suppress("UNCHECKED_CAST")
+                initialize(config = call.arguments as HashMap<String, Any?>)
                 result.success(true)
             }
             "open" -> {
@@ -82,14 +71,6 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
 
     private fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-    }
-
-    override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
-        eventSink = events
-    }
-
-    override fun onCancel(arguments: Any?) {
-        eventSink = null
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
@@ -112,11 +93,9 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
         }
     }
 
-    private fun initialize(config:
-    HashMap<String, Any?>
-    ) {
+    private fun initialize(config: HashMap<String, Any?>) {
 
-        var callback = object : ConnectCallback() {
+        val callback = object : ConnectCallback() {
 
             override fun onAccountConnected(
                 account_id: String?,
@@ -154,9 +133,9 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
 
         val map = hashMapOf<String, Any?>()
         map.putAll(config)
-        map.put("environment", getPhylloEnvironment(config.get("environment") as String))
-        map.put("callback", callback)    
-        PhylloConnect.initialize(context = context,map)
+        map["environment"] = getPhylloEnvironment(config["environment"] as String)
+        map["callback"] = callback
+        PhylloConnect.initialize(context = context, map)
 
     }
 
@@ -170,11 +149,10 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
         user_id: String?,
     ) {
         val result: MutableMap<String, Any?> = HashMap()
-        result["callback"] = "onAccountConnected"
         result["account_id"] = account_id
         result["work_platform_id"] = work_platform_id
         result["user_id"] = user_id
-        eventSink?.success(result)
+        channel.invokeMethod("onAccountConnected", result)
     }
 
     private fun onPhylloAccountDisconnected(
@@ -183,26 +161,23 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
         user_id: String?,
     ) {
         val result: MutableMap<String, Any?> = HashMap()
-        result["callback"] = "onAccountDisconnected"
         result["account_id"] = account_id
         result["work_platform_id"] = work_platform_id
         result["user_id"] = user_id
-        eventSink?.success(result)
+        channel.invokeMethod("onAccountDisconnected", result)
     }
 
     private fun onPhylloTokenExpired(user_id: String?) {
         val result: MutableMap<String, Any?> = HashMap()
-        result["callback"] = "onTokenExpired"
         result["user_id"] = user_id
-        eventSink?.success(result)
+        channel.invokeMethod("onTokenExpired", result)
     }
 
     private fun onPhylloExit(reason: String?, user_id: String?) {
         val result: MutableMap<String, Any?> = HashMap()
-        result["callback"] = "onExit"
         result["reason"] = reason
         result["user_id"] = user_id
-        eventSink?.success(result)
+        channel.invokeMethod("onExit", result)
     }
 
     private fun onPhylloConnectionFailure(
@@ -211,11 +186,9 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Strea
         work_platform_id: String?,
     ) {
         val result: MutableMap<String, Any?> = HashMap()
-        result["callback"] = "onConnectionFailure"
         result["reason"] = reason
         result["work_platform_id"] = work_platform_id
         result["user_id"] = user_id
-
-        eventSink?.success(result)
+        channel.invokeMethod("onConnectionFailure", result)
     }
 }

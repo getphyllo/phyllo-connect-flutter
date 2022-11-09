@@ -2,24 +2,18 @@ import Flutter
 import UIKit
 import PhylloConnect
 
-
-public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHandler,
-                                       PhylloConnectDelegate {
+public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, PhylloConnectDelegate {
     
-    private var onEventSink: FlutterEventSink?
-    
+    private static var channel: FlutterMethodChannel?
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "phyllo_connect", binaryMessenger: registrar.messenger())
         
         let instance = SwiftPhylloConnectPlugin()
         
-        let eventChannel = FlutterEventChannel(
-            name: "phyllo_connect/connect_callback",
-            binaryMessenger: registrar.messenger())
-        eventChannel.setStreamHandler(instance)
-        
         registrar.addMethodCallDelegate(instance, channel: channel)
+        
+        self.channel = channel
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -34,31 +28,31 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
         } else if call.method == "initialize" {
             
             if let config  = call.arguments as? Dictionary<String, Any>{
-
-                guard let environment = config["environment"] as? String else {
+                
+                guard config["environment"] is String else {
                     toastMessage("Please pass a valid environment.")
                     result(false)
                     return
                 }
-
-                guard let clientDisplayName =  config["clientDisplayName"] as? String  else {
+                
+                guard config["clientDisplayName"] is String  else {
                     toastMessage("Please pass a valid clientDisplayName.")
                     result(false)
                     return
                 }
-            
-                guard let token =  config["token"] as? String else {
+                
+                guard config["token"] is String else {
                     toastMessage("Please pass a valid token.")
                     result(false)
                     return
                 }
-            
-                guard  let userId =  config["userId"] as? String else {
+                
+                guard  config["userId"] is String else {
                     toastMessage("Please pass a valid userId.")
                     result(false)
                     return
                 }
-
+                
                 initialize(config: config)
                 result(true)
                 
@@ -70,16 +64,6 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
         } else {
             result(FlutterMethodNotImplemented)
         }
-    }
-    
-    public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
-        onEventSink = events
-        return nil
-    }
-    
-    public func onCancel(withArguments arguments: Any?) -> FlutterError? {
-        onEventSink = nil
-        return nil
     }
     
     
@@ -99,7 +83,7 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
     func initialize(config : Dictionary<String, Any>) {
         var phylloConfig = [String:Any]()
         phylloConfig = config
-        phylloConfig["environment"] = getPhylloEnvironment(env: config["environment"] as? String) 
+        phylloConfig["environment"] = getPhylloEnvironment(env: config["environment"] as? String)
         phylloConfig["delegate"] = self
         
         PhylloConnect.shared.initialize(config: phylloConfig)
@@ -111,54 +95,45 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, FlutterStreamHan
     
     public func onAccountConnected(account_id: String, work_platform_id: String, user_id: String) {
         var result = [String : Any]()
-        result["callback"] = "onAccountConnected"
         result["account_id"] = account_id
         result["work_platform_id"] = work_platform_id
         result["user_id"] = user_id
         
-        guard let sink = onEventSink else { return }
-        sink(result)
+        SwiftPhylloConnectPlugin.channel?.invokeMethod("onAccountConnected", arguments: result)
+        return
     }
     
     public func onAccountDisconnected(account_id: String, work_platform_id: String, user_id: String) {
         var result = [String : Any]()
-        result["callback"] = "onAccountDisconnected"
         result["account_id"] = account_id
         result["work_platform_id"] = work_platform_id
         result["user_id"] = user_id
         
-        guard let sink = onEventSink else { return }
-        sink(result)
+        SwiftPhylloConnectPlugin.channel?.invokeMethod("onAccountDisconnected", arguments: result)
     }
     
     public func onTokenExpired(user_id: String) {
         var result = [String : Any]()
-        result["callback"] = "onTokenExpired"
         result["user_id"] = user_id
         
-        guard let sink = onEventSink else { return }
-        sink(result)
+        SwiftPhylloConnectPlugin.channel?.invokeMethod("onTokenExpired", arguments: result)
     }
     
     public func onExit(reason: String, user_id: String) {
         var result = [String : Any]()
-        result["callback"] = "onExit"
         result["reason"] = reason
         result["user_id"] = user_id
         
-        guard let sink = onEventSink else { return }
-        sink(result)
+        SwiftPhylloConnectPlugin.channel?.invokeMethod("onExit", arguments: result)
     }
     
     public func onConnectionFailure(reason: String, work_platform_id: String, user_id: String) {
         var result = [String : Any]()
-        result["callback"] = "onConnectionFailure"
         result["reason"] = reason
         result["work_platform_id"] = work_platform_id
         result["user_id"] = user_id
         
-        guard let sink = onEventSink else { return }
-        sink(result)
+        SwiftPhylloConnectPlugin.channel?.invokeMethod("onConnectionFailure", arguments: result)
     }
     
     func toastMessage(_ message: String){

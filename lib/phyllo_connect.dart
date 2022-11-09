@@ -1,8 +1,20 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter/services.dart';
 import 'package:phyllo_connect/src/verison_constants.dart';
 import 'src/enum.dart';
+
 export 'src/enum.dart';
+
+typedef AccountConnectedCallback = void Function(String?, String?, String?);
+
+typedef AccountDisconnectedCallback = void Function(String?, String?, String?);
+
+typedef TokenExpiredCallback = void Function(String?);
+
+typedef ExitCallback = void Function(String?, String?);
+
+typedef ConnectionFailureCallback = void Function(String?, String?, String?);
 
 /// Phyllo is a data gateway to creator economy platforms.
 /// Using Phyllo, your users can grant access to their data within your own app.
@@ -21,10 +33,14 @@ class PhylloConnect {
 
   static PhylloConnect get instance => PhylloConnect._();
 
-  final MethodChannel _channel = const MethodChannel('phyllo_connect');
+  final MethodChannel _channel = const MethodChannel('phyllo_connect')
+    ..setMethodCallHandler(_nativeCallHandler);
 
-  final EventChannel _eventChannel =
-      const EventChannel('phyllo_connect/connect_callback');
+  static AccountConnectedCallback? _onAccountConnected;
+  static AccountDisconnectedCallback? _onAccountDisconnected;
+  static TokenExpiredCallback? _onTokenExpired;
+  static ExitCallback? _onExit;
+  static ConnectionFailureCallback? _onConnectionFailure;
 
   /// To get started, you will require the API keys and secrets to access the Phyllo environment.
   /// In order to obtain the credentials, you can reach out to `contact@getphyllo.com`
@@ -68,57 +84,84 @@ class PhylloConnect {
   }
 
   void onConnectCallback({
-    /// onAccountConnected is called when the user has successfully connected to the platform.
+    /// `onAccountConnected` is called when the user has successfully connected to the platform.
     ///
-    required void Function(String?, String?, String?)? onAccountConnected,
+    required AccountConnectedCallback onAccountConnected,
 
-    /// onAccountDisconnected is called when the user has disconnected from the platform.
+    /// `onAccountDisconnected` is called when the user has disconnected from the platform.
     ///
-    required void Function(String?, String?, String?)? onAccountDisconnected,
+    required AccountDisconnectedCallback onAccountDisconnected,
 
-    /// onTokenExpired is called when the token has expired.
+    /// `onTokenExpired` is called when the token has expired.
     ///
-    required void Function(String?)? onTokenExpired,
+    required TokenExpiredCallback onTokenExpired,
 
-    /// onExit is called when the user has exited the Phyllo Connect flow.
+    /// `onExit` is called when the user has exited the Phyllo Connect flow.
     ///
-    required void Function(String?, String?)? onExit,
+    required ExitCallback onExit,
 
-    //[Optional] onConnectionFailure : User can now add a new callback connectionFailure for tracking the reason of accounts not getting connected
-
-    Function(String?, String?, String?)? onConnectionFailure,
+    /// [Optional] `onConnectionFailure` : User can now add a new callback connectionFailure for tracking the reason of accounts not getting connected
+    ///
+    ConnectionFailureCallback? onConnectionFailure,
   }) {
-    _eventChannel.receiveBroadcastStream().listen((event) {
-      switch (event['callback']) {
+    _onAccountConnected = onAccountConnected;
+    _onAccountDisconnected = onAccountDisconnected;
+    _onTokenExpired = onTokenExpired;
+    _onExit = onExit;
+    _onConnectionFailure = onConnectionFailure;
+  }
+
+  static Future<dynamic> _nativeCallHandler(MethodCall call) async {
+    try {
+      Map<String, dynamic> arguments =
+          Map<String, dynamic>.from(call.arguments);
+      switch (call.method) {
         case 'onAccountConnected':
-          onAccountConnected?.call(
-            event['account_id'],
-            event['work_platform_id'],
-            event['user_id'],
-          );
+          if (_onAccountConnected != null) {
+            _onAccountConnected!(
+              arguments['account_id'],
+              arguments['work_platform_id'],
+              arguments['user_id'],
+            );
+          }
+
           break;
         case 'onAccountDisconnected':
-          onAccountDisconnected?.call(
-            event['account_id'],
-            event['work_platform_id'],
-            event['user_id'],
-          );
+          if (_onAccountDisconnected != null) {
+            _onAccountDisconnected!(
+              arguments['account_id'],
+              arguments['work_platform_id'],
+              arguments['user_id'],
+            );
+          }
           break;
         case 'onTokenExpired':
-          onTokenExpired?.call(event['user_id']);
+          if (_onTokenExpired != null) {
+            _onTokenExpired!(arguments['user_id']);
+          }
+
           break;
         case 'onExit':
-          onExit?.call(event['reason'], event['user_id']);
+          if (_onExit != null) {
+            _onExit!(arguments['reason'], arguments['user_id']);
+          }
           break;
         case 'onConnectionFailure':
-          onConnectionFailure?.call(
-            event['reason'],
-            event['work_platform_id'],
-            event['user_id'],
-          );
+          if (_onConnectionFailure != null) {
+            _onConnectionFailure!(
+              arguments['reason'],
+              arguments['work_platform_id'],
+              arguments['user_id'],
+            );
+          }
           break;
         default:
+          throw Exception('unknown method called from native');
       }
-    }, cancelOnError: true);
+    } catch (e) {
+      log(e.toString());
+      throw Exception(e);
+    }
+    return false;
   }
 }
