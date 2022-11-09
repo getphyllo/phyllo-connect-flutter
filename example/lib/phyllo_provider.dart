@@ -67,8 +67,7 @@ class PhylloProvider extends DefaultChangeNotifier {
       'environment': Configs.environment.name,
       'userId': _userId!,
       'token': _token!,
-      'workPlatformId': workPlatformId,
-      'singleAccount': Platform.isIOS ? false : 'false'
+      'workPlatformId': workPlatformId
     };
 
     _phylloConnect.initialize(config);
