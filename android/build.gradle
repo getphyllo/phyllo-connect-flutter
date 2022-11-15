@@ -62,5 +62,5 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     //implementation "com.getphyllo:phyllo-connect:0.2.0"
     //implementation "com.getphyllo:phyllo-connect:0.3.0" 
-    implementation "com.getphyllo:phyllo-connect:0.2.3-SNAPSHOT"   
+    implementation "com.getphyllo:phyllo-connect:0.2.5-SNAPSHOT"   
 }
