@@ -1,8 +1,8 @@
 ## 0.3.0
 
-- signature changes : converted from class structure to dictionary
-- Improvement made to load screen which will give better performance
-- Fixes made
+- Signature change for initialize method.
+- Performance improvement for better loader and load times.
+- Internal fixes.
 
 ## 0.2.0
 
