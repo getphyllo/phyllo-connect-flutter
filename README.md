@@ -40,6 +40,7 @@ import 'package:phyllo_connect_example/constants/configs.dart';
 final PhylloConnect _phylloConnect = PhylloConnect.instance;
 //Too Lunch the sdk here it will method
 void _launchSdk(String workPlatformId) {
+
   Map<String, dynamic> config = {
       'clientDisplayName': clientDisplayName,
       'environment': Configs.environment.name,
