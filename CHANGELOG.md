@@ -1,3 +1,6 @@
+## 0.3.1
+
+- Signature change for initialize method.
 ## 0.3.0
 
 - Signature change for initialize method.
