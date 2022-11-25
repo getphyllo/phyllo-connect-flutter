@@ -134,6 +134,8 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
         val map = hashMapOf<String, Any?>()
         map.putAll(config)
         map["environment"] = getPhylloEnvironment(config["environment"] as String)
+        map["external_sdk_name"] = "flutter" //for Analytics
+        map["external_sdk_version"] = "0.3.2"  // for sdk version
         map["callback"] = callback
         PhylloConnect.initialize(context = context, map)
 
