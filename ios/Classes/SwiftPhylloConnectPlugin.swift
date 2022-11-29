@@ -86,7 +86,7 @@ public class SwiftPhylloConnectPlugin: NSObject, FlutterPlugin, PhylloConnectDel
         phylloConfig["environment"] = getPhylloEnvironment(env: config["environment"] as? String)
         phylloConfig["delegate"] = self
         phylloConfig["external_sdk_name"] = "flutter" //for Analytics
-        phylloConfig["external_sdk_version"] = "0.3.1"  // for sdk version
+        phylloConfig["external_sdk_version"] = "0.3.2"  // for sdk version
         
         PhylloConnect.shared.initialize(config: phylloConfig)
     }
