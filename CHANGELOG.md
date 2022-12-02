@@ -1,6 +1,7 @@
 ## 0.3.2
 
-- version() method - A new version has been introduced in the respective SDKs which will let the developers know the version of Phyllo SDK integrated in their app.
+- Added version method to help with debugging.
+- More robust internal logging and debugging mechanisms.
 ## 0.3.1
 
 - Signature change for initialize method.
