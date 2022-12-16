@@ -184,8 +184,8 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
 
     private fun onPhylloConnectionFailure(
         reason: String?,
-        user_id: String?,
         work_platform_id: String?,
+        user_id: String?
     ) {
         val result: MutableMap<String, Any?> = HashMap()
         result["reason"] = reason
