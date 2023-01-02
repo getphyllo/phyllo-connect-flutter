@@ -1,3 +1,7 @@
+## 0.3.2
+
+- Added version method to help with debugging.
+- More robust internal logging and debugging mechanisms.
 ## 0.3.1
 
 - Signature change for initialize method.

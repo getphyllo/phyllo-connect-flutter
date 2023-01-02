@@ -56,7 +56,7 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
-            
+
         }
     }
 }

@@ -360,7 +360,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development: Pankaj Patel (DR35STSKUX)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development: Pankaj Patel (DR35STSKUX)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = W46X4FW8UP;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_ARCHS = "";
@@ -370,7 +370,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.1;
+				MARKETING_VERSION = 0.3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.getphyllo.fluttersample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = dev_flutter_phyllo;
@@ -496,7 +496,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development: Pankaj Patel (DR35STSKUX)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development: Pankaj Patel (DR35STSKUX)";
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = W46X4FW8UP;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_ARCHS = "";
@@ -506,7 +506,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.1;
+				MARKETING_VERSION = 0.3.2;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.getphyllo.fluttersample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -528,7 +528,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution: Phyllo Inc. (W46X4FW8UP)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution: Phyllo Inc. (W46X4FW8UP)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = W46X4FW8UP;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_ARCHS = "";
@@ -538,7 +538,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.1;
+				MARKETING_VERSION = 0.3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.getphyllo.fluttersample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = dist_dev_fl_phyllo;

@@ -51,7 +51,7 @@ void _launchSdk(String workPlatformId) {
 
     _phylloConnect.initialize(config);
     _phylloConnect.open();
-
+    
     //Call Back from Android/iOS SDK
     _phylloConnect.onConnectCallback(
         onAccountConnected: (account_id, work_platform_id, user_id) {
@@ -68,6 +68,8 @@ void _launchSdk(String workPlatformId) {
       log('onConnectionFailure: $reason, $work_platform_id, $user_id');
     );
 
+    log('version: ${_phylloConnect.version()}');
+    
   }
 
 ```
