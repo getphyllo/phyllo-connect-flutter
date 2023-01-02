@@ -92,6 +92,9 @@ class PhylloProvider extends DefaultChangeNotifier {
       },
     );
 
+    //get supported version details
+    log('version: ${_phylloConnect.version()}');
+
   }
 
   Future<String?> getPhylloEnvironmentUrl(PhylloEnvironment environment) async {

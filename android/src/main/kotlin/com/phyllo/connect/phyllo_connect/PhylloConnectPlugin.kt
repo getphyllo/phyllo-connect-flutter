@@ -134,6 +134,8 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
         val map = hashMapOf<String, Any?>()
         map.putAll(config)
         map["environment"] = getPhylloEnvironment(config["environment"] as String)
+        map["external_sdk_name"] = "flutter" //for Analytics
+        map["external_sdk_version"] = "0.3.2"  // for sdk version
         map["callback"] = callback
         PhylloConnect.initialize(context = context, map)
 
@@ -182,8 +184,8 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
 
     private fun onPhylloConnectionFailure(
         reason: String?,
-        user_id: String?,
         work_platform_id: String?,
+        user_id: String?
     ) {
         val result: MutableMap<String, Any?> = HashMap()
         result["reason"] = reason
