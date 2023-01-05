@@ -86,6 +86,9 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
             "sandbox" -> {
                 return PhylloConnect.ENVIRONMENT.SANDBOX
             }
+            "staging" -> {
+                return PhylloConnect.ENVIRONMENT.STAGING
+            }
             "production" -> {
                 return PhylloConnect.ENVIRONMENT.PRODUCTION
             }
