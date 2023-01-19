@@ -7,6 +7,8 @@ enum PhylloEnvironment {
   /// All API endpoints will return mocked data and no changes are made to any account.
   sandbox,
 
+  staging,
+
   /// Use Production mode to go live with your integration.
   /// On production, your users will need to use their real credentials to log in to the diferent platforms.
   /// API endpoints return real data and updates are made to accounts. Note that all API calls are billable in this mode.
