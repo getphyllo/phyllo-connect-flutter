@@ -86,6 +86,9 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
             "sandbox" -> {
                 return PhylloConnect.ENVIRONMENT.SANDBOX
             }
+            "staging" -> {
+                return PhylloConnect.ENVIRONMENT.STAGING
+            }
             "production" -> {
                 return PhylloConnect.ENVIRONMENT.PRODUCTION
             }
@@ -135,7 +138,7 @@ class PhylloConnectPlugin : FlutterPlugin, MethodCallHandler {
         map.putAll(config)
         map["environment"] = getPhylloEnvironment(config["environment"] as String)
         map["external_sdk_name"] = "flutter" //for Analytics
-        map["external_sdk_version"] = "0.3.2"  // for sdk version
+        map["external_sdk_version"] = "0.3.3"  // for sdk version
         map["callback"] = callback
         PhylloConnect.initialize(context = context, map)
 

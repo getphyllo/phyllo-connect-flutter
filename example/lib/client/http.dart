@@ -39,9 +39,6 @@ class Http {
           final Response response = await _client.post(uri,
               body: json.encode(body), headers: headers);
 
-          log('${response.statusCode} ${response.request} ${response.body}',
-              name: 'PhylloConnect');
-
           if (response.statusCode == 200 || response.statusCode == 201) {
             Result result = Result.success(json.decode(response.body));
             return result;
@@ -52,9 +49,6 @@ class Http {
         // Send a GET request with the given parameter.
         case RequestType.get:
           final Response response = await _client.get(uri, headers: headers);
-
-          log('${response.statusCode} ${response.request} ${response.body}',
-              name: 'PhylloConnect');
 
           if (response.statusCode == 200 || response.statusCode == 201) {
             Result result = Result.success(json.decode(response.body));

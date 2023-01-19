@@ -24,7 +24,7 @@ class Configs {
 
   static const String clientSecret = '<client secret here>';
 
-  static const PhylloEnvironment env = PhylloEnvironment.sanbox; //set phyllo environment
+  static const PhylloEnvironment environment = PhylloEnvironment.sandbox; //set phyllo environment
 }
 ```
 
@@ -43,7 +43,7 @@ void _launchSdk(String workPlatformId) {
 
   Map<String, dynamic> config = {
       'clientDisplayName': clientDisplayName,
-      'environment': Configs.environment.name,
+      'environment': PhylloEnvironment.sandbox.name,
       'userId': _userId!,
       'token': _token!,
       'workPlatformId': workPlatformId
