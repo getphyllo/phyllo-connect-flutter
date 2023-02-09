@@ -1,3 +1,7 @@
+## 0.3.4-beta.1
+
+- Added support for staging environment
+
 ## 0.3.3
 
 - Added support for staging environment
