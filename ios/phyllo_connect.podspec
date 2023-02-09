@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'phyllo_connect'
-  s.version          = '0.3.3'
+  s.version          = '0.3.4-beta.1'
   s.summary          = 'Phyllo Connect is a quick and secure way to connect work platforms via Phyllo in your iOS app.'
   s.description      = 'Phyllo Connect is a quick and secure way to connect work platforms via Phyllo in your iOS app. Connect SDK manages work platform authentication (credential validation, multi-factor authentication, error handling, etc).'
   s.homepage         = 'https://github.com/getphyllo/phyllo-connect-ios'
@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'PhylloConnect','0.3.2'
+  s.dependency 'PhylloConnect','0.3.3-beta3'
   s.platform = :ios, '12.0'
 
   # Flutter.framework does not contain a i386 slice.
