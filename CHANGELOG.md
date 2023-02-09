@@ -1,6 +1,6 @@
 ## 0.3.4-beta.1
 
-- Added support for staging environment
+- Resolved internal module conflict from ios sdk side.
 
 ## 0.3.3
 
