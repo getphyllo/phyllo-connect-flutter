@@ -1,3 +1,7 @@
+## 0.3.4-beta.2
+
+- Upgraded with Kotlin supported version and Build gradle version.
+
 ## 0.3.4-beta.1
 
 - Resolved internal module conflict from ios sdk side.
