@@ -1,3 +1,7 @@
+## 0.3.4
+
+- Android Sdk fixes and Improvements.
+
 ## 0.3.4-beta.2
 
 - Upgraded with Kotlin supported version and Build gradle version.
