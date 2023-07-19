@@ -1,6 +1,7 @@
 ## 0.3.4
 
 - Android Sdk fixes and Improvements.
+- ios sdk improvement
 
 ## 0.3.4-beta.2
 
