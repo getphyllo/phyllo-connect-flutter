@@ -1,10 +1,10 @@
 name: phyllo_connect
 description: Phyllo Connect is a quick and secure way to connect work platforms via Phyllo in your app.
-version: 0.3.4
+version: 0.3.5
 homepage: https://github.com/getphyllo/phyllo-connect-flutter
 
 environment:
-  sdk: ">=2.15.0 <3.0.0"
+  sdk: ">=2.15.0 <3.2.3"
   flutter: ">=2.5.0"
 
 dependencies:
