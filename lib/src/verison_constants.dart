@@ -1,7 +1,7 @@
 class VersionConstants {
   VersionConstants._();
 
-  static const String flutterSdkVersion = '0.3.4';
+  static const String flutterSdkVersion = '0.3.5';
 
   static const String iosSdkVersion = '0.3.4';
 
