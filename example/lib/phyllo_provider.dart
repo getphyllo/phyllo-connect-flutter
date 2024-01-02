@@ -61,7 +61,7 @@ class PhylloProvider extends DefaultChangeNotifier {
     }
   }
 
-  void _launchSdk(String workPlatformId) {
+  Future<void> _launchSdk(String workPlatformId) async {
     Map<String, dynamic> config = {
       'clientDisplayName': clientDisplayName,
       'environment': Configs.environment.name,
@@ -70,7 +70,7 @@ class PhylloProvider extends DefaultChangeNotifier {
       'workPlatformId': workPlatformId
     };
 
-    _phylloConnect.initialize(config);
+   await _phylloConnect.initialize(config);
     _phylloConnect.open();
 
     _phylloConnect.onConnectCallback(
