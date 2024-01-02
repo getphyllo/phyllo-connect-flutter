@@ -1,3 +1,7 @@
+## 0.3.5
+
+- Upgraded compileSdkVersion and targetSdkVersion to API 34.
+
 ## 0.3.4
 
 - Android Sdk fixes and Improvements.
