@@ -1,3 +1,7 @@
+## 0.3.6
+
+- fixes and improvement with crashes
+
 ## 0.3.5
 
 - Upgraded compileSdkVersion and targetSdkVersion to API Version 34.
