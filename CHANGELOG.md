@@ -1,3 +1,7 @@
+## 0.3.7-beta.1
+
+- Upgraded with flutter sdk version.
+
 ## 0.3.6
 
 - fixes and improvement with crashes
