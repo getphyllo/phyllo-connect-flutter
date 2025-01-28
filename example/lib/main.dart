@@ -9,7 +9,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,22 +29,19 @@ class MyApp extends StatelessWidget {
   ThemeData _getThemeData() {
     return ThemeData(
       primaryColor: AppColors.primaryColor,
-      backgroundColor: Colors.white,
       scaffoldBackgroundColor: Colors.white,
       visualDensity: VisualDensity.adaptivePlatformDensity,
       splashColor: Colors.white.withOpacity(0.2),
       highlightColor: Colors.white.withOpacity(0.2),
       unselectedWidgetColor: Colors.grey.shade400,
       checkboxTheme: CheckboxThemeData(
-        checkColor: MaterialStateProperty.all(Colors.white),
+        checkColor: WidgetStateProperty.all(Colors.white),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4),
           side: BorderSide(width: 1, color: Colors.grey.shade400),
         ),
-      ),
-      colorScheme:
-          ColorScheme.fromSwatch(primarySwatch: generateMaterialColor())
-              .copyWith(secondary: AppColors.primaryColor),
+      ), colorScheme: ColorScheme.fromSwatch(primarySwatch: generateMaterialColor())
+              .copyWith(secondary: AppColors.primaryColor).copyWith(surface: Colors.white),
     );
   }
 }

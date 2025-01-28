@@ -7,11 +7,10 @@ class Loader extends StatelessWidget {
   final bool isExpanded;
 
   const Loader(
-      {Key? key,
+      {super.key,
       this.isBackground = false,
       this.visible = true,
-      this.isExpanded = false})
-      : super(key: key);
+      this.isExpanded = false});
 
   factory Loader.loading() {
     return const Loader();

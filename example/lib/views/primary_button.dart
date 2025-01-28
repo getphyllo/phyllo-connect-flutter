@@ -8,21 +8,17 @@ class PrimaryButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const PrimaryButton({
-    Key? key,
+    super.key,
     required this.label,
     required this.onPressed,
     this.height = 48,
     this.width,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     var mq = MediaQuery.of(context);
     return MaterialButton(
-      child: Text(
-        label,
-        style: const TextStyle(fontSize: 15, letterSpacing: 0.5),
-      ),
       height: height,
       minWidth: width ?? mq.size.width,
       elevation: 0,
@@ -31,6 +27,10 @@ class PrimaryButton extends StatelessWidget {
       color: AppColors.primaryColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       onPressed: onPressed,
+      child: Text(
+        label,
+        style: const TextStyle(fontSize: 15, letterSpacing: 0.5),
+      ),
     );
   }
 }
@@ -43,18 +43,17 @@ class DialogButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const DialogButton({
-    Key? key,
+    super.key,
     required this.label,
     required this.onPressed,
     this.color = Colors.white,
     this.borderColor = AppColors.primaryColor,
     this.backgroundColor = AppColors.primaryColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      child: Text(label),
       style: TextButton.styleFrom(
         foregroundColor: color, minimumSize: const Size(100, 34),
         textStyle: const TextStyle(
@@ -68,6 +67,7 @@ class DialogButton extends StatelessWidget {
         ),
       ),
       onPressed: onPressed,
+      child: Text(label),
     );
   }
 }
