@@ -2,7 +2,6 @@
 
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:phyllo_connect/phyllo_connect.dart';
 import 'package:phyllo_connect_example/client/phyllo_repository.dart';
@@ -100,7 +99,7 @@ class PhylloProvider extends DefaultChangeNotifier {
   Future<String?> getPhylloEnvironmentUrl(PhylloEnvironment environment) async {
     try {
       String? env = await _phylloConnect.getPhylloEnvironmentUrl(environment);
-      return env!;
+      return env;
     } catch (e) {
       debugPrint(e.toString());
       return null;
