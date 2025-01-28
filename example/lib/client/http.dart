@@ -33,7 +33,6 @@ class Http {
       };
 
       switch (requestType) {
-
         // Send a POST request with the given parameter.
         case RequestType.post:
           final Response response = await _client.post(uri,

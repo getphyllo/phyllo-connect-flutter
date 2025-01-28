@@ -4,8 +4,8 @@ class Configs {
   Configs._();
 
   static const String clientId = '<client id here>';
-  
+
   static const String clientSecret = '<client secret here>';
-  
+
   static const PhylloEnvironment environment = PhylloEnvironment.sandbox;
 }

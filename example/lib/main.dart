@@ -40,8 +40,11 @@ class MyApp extends StatelessWidget {
           borderRadius: BorderRadius.circular(4),
           side: BorderSide(width: 1, color: Colors.grey.shade400),
         ),
-      ), colorScheme: ColorScheme.fromSwatch(primarySwatch: generateMaterialColor())
-              .copyWith(secondary: AppColors.primaryColor).copyWith(surface: Colors.white),
+      ),
+      colorScheme:
+          ColorScheme.fromSwatch(primarySwatch: generateMaterialColor())
+              .copyWith(secondary: AppColors.primaryColor)
+              .copyWith(surface: Colors.white),
     );
   }
 }

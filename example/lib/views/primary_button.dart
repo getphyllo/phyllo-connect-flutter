@@ -55,7 +55,8 @@ class DialogButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
-        foregroundColor: color, minimumSize: const Size(100, 34),
+        foregroundColor: color,
+        minimumSize: const Size(100, 34),
         textStyle: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,

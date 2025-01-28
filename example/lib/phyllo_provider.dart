@@ -69,7 +69,7 @@ class PhylloProvider extends DefaultChangeNotifier {
       'workPlatformId': workPlatformId
     };
 
-   await _phylloConnect.initialize(config);
+    await _phylloConnect.initialize(config);
     _phylloConnect.open();
 
     _phylloConnect.onConnectCallback(
@@ -93,7 +93,6 @@ class PhylloProvider extends DefaultChangeNotifier {
 
     //get supported version details
     log('version: ${_phylloConnect.version()}');
-
   }
 
   Future<String?> getPhylloEnvironmentUrl(PhylloEnvironment environment) async {
