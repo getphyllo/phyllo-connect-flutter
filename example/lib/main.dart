@@ -29,7 +29,6 @@ class MyApp extends StatelessWidget {
   ThemeData _getThemeData() {
     return ThemeData(
       primaryColor: AppColors.primaryColor,
-      backgroundColor: Colors.white,
       scaffoldBackgroundColor: Colors.white,
       visualDensity: VisualDensity.adaptivePlatformDensity,
       splashColor: Colors.white.withOpacity(0.2),
